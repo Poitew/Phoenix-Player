@@ -1,17 +1,13 @@
 import { createStaticNavigation } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import MusicPlayer from "../routes/Player"
 import Library from "../routes/Library.tsx";
 
-const router = createBottomTabNavigator({
+const router = createStackNavigator({
     screens: {
-        Library: {
-            screen: Library,
-        },
+        Library: Library,
 
-        Player: {
-            screen: MusicPlayer,
-        },
+        Player: MusicPlayer,
     },
 
     screenOptions: {
