@@ -4,10 +4,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchAudioFiles, fetchAudioFilesByFolder, Song } from '@gauch_99/react-native-audio-files';
 import { useNavigation } from '@react-navigation/native';
 
+import Headphones from "../../assets/icons/headphones.svg";
+import Settings from "../../assets/icons/settings.svg";
+
 function Library() {
     const [songs, set_songs] = useState<Song[]>([]);
     const [input_dir, set_input_dir] = useState<string>("/");
     const navigation: any = useNavigation();
+
+    const icon_size = 40;
 
     useEffect(() => {
         request_permissions();
@@ -30,16 +35,35 @@ function Library() {
         set_songs(songs);
     }
 
+
     async function get_songs_from_dir() {
         const songs = await fetchAudioFilesByFolder(input_dir);
         set_songs(songs);
     }
 
-    function redirect_to_player(key: number) {
+
+    function redirect_to_player_with_songs(key: number) {
+        const tracks = songs_to_track();
+
         navigation.navigate("Player", {
             key: key,
-            songs: songs,
+            songs: tracks,
         });
+    }
+
+
+    function redirect_to_player() {
+        navigation.navigate("Player");
+    }
+
+
+    function songs_to_track() {
+        return songs.map((song) => ({
+            url: song.audioUrl,
+            title: song.title,
+            artist: song.artist,
+            artwork: song.imageUrl,
+        }));
     }
 
     return (
@@ -55,6 +79,18 @@ function Library() {
                     />
                 </View>
 
+
+                <View style={styles.button_container} >
+                    <Pressable onPress={redirect_to_player} style={[styles.button_base, styles.player_button]}>
+                        <Headphones width={icon_size} height={icon_size} />
+                    </Pressable>
+
+                    <Pressable onPress={() => alert("Work In Progress, don't mind...")} style={[styles.button_base, styles.settings]}>
+                        <Settings width={icon_size} height={icon_size} />
+                    </Pressable>
+                </View>
+
+
                 <View style={styles.container}>
                     {songs.map((song, i) => (
                         <Pressable 
@@ -62,7 +98,7 @@ function Library() {
                                 styles.card,
                                 pressed && styles.hover_card,
                             ]}
-                            onPress={() => redirect_to_player(i)} 
+                            onPress={() => redirect_to_player_with_songs(i)}
                             key={i}
                         >
                             <Image source={{ uri: song.imageUrl }} style={styles.image} />
@@ -87,10 +123,33 @@ const styles = StyleSheet.create({
     },
 
     input: {
+        backgroundColor: "#25203fff",
         color: "white",
         paddingLeft: 20,
-        backgroundColor: "#25203fff",
+        marginBottom: 15,
         borderRadius: 50,
+    },
+
+    button_container: {
+        flexDirection: "row",
+        justifyContent: "center",
+        gap: 10,
+    },
+
+    button_base: {
+        width: "45%",
+        height: 100,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 10,
+    },
+    
+    player_button: {
+        backgroundColor: "#C7DA54",
+    },
+
+    settings: {
+        backgroundColor: "#3ac4ffff",
     },
 
     container: {
@@ -100,6 +159,7 @@ const styles = StyleSheet.create({
 
     card: {
         padding: 5,
+        borderRadius: 7.5,
         flexDirection: "row",
         alignItems: "center",
         gap: 15,
@@ -109,14 +169,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#231e39ff",
     },
 
-
-    slider: {
-        width: "80%",
-    },
-
     image: {
-        width: 75,
-        height: 75,
+        width: 60,
+        height: 60,
         borderRadius: 15
     },
 
