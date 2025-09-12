@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0f0d19ff"
     },
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0f0d19ff"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
@@ -26,6 +26,9 @@
         "android.permission.READ_MEDIA_AUDIO"
       ],
       "package": "com.poitew.phoenix_player"
+    },
+    "androidNavigationBar": {
+      "visible": "sticky-immersive"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -9,14 +9,14 @@ import seconds_to_time from '../utility/SecondsToTime';
 
 import SkipNext from "../../assets/icons/skip.svg";
 import SkipBack from "../../assets/icons/skip-back.svg";
-import Resume from "../../assets/icons/resume_white.svg";
+import Resume from "../../assets/icons/resume.svg";
 import Stop from "../../assets/icons/stop.svg";
 import Vinyl from "../../assets/icons/vinyl.svg";
 
 
 function Player({ route }: any) {
     const [ is_playing,     set_is_playing    ]   = useState<boolean>(true);
-    const [ songs,          set_songs         ]   = useState<Track[]>(route.params?.songs);
+    const [ songs                             ]   = useState<Track[]>(route.params?.songs);
     const [ current_song,   set_current_song  ]   = useState<Track>();
 
     const { position, duration } = useProgress();
@@ -28,6 +28,8 @@ function Player({ route }: any) {
 
 
     useEffect(() => {
+        get_playing_track();
+
         const listener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async () => {
             const current_track = await TrackPlayer.getActiveTrack();
             set_current_song(current_track);
@@ -42,6 +44,16 @@ function Player({ route }: any) {
             add_queue();
         }
     }, [route.params?.key]);
+
+
+    async function get_playing_track() {
+        const track_id = await TrackPlayer.getActiveTrackIndex();
+
+        if (track_id != undefined) {
+            const track = await TrackPlayer.getTrack(track_id);
+            set_current_song(track);
+        }
+    }
 
 
     async function add_queue() {
@@ -61,8 +73,8 @@ function Player({ route }: any) {
 
     return (
         <SafeAreaView style={styles.main}>
-            <Pressable onPress={() => navigation.navigate("Library")} >
-                <Text>Go back</Text>
+            <Pressable onPress={() => navigation.navigate("Home")} >
+                <Text style={{color: "white"}}>Go back</Text>
             </Pressable>
 
             {current_song?.artwork ?
@@ -109,7 +121,7 @@ function Player({ route }: any) {
                     <SkipBack width={icon_size} height={icon_size} />
                 </Pressable>
 
-                <Pressable onPress={handle_play}>
+                <Pressable style={styles.play_button} onPress={handle_play}>
                     {is_playing ? 
                         <Stop width={icon_size_lg} height={icon_size_lg} /> :
                         <Resume width={icon_size_lg} height={icon_size_lg} />
@@ -180,6 +192,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 30
     },
+
+    play_button: {
+        backgroundColor: "#C7DA54",
+        borderRadius: 100,
+    }
 });
 
 export default Player;

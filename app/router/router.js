@@ -1,13 +1,14 @@
 import { createStaticNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import MusicPlayer from "../routes/Player"
-import Library from "../routes/Library.tsx";
+import Home from "../routes/Home";
+import MusicPlayer from "../routes/Player";
+import Library from "../routes/Library";
 
 const router = createStackNavigator({
     screens: {
-        Library: Library,
-
+        Home: Home,
         Player: MusicPlayer,
+        Library: Library,
     },
 
     screenOptions: {

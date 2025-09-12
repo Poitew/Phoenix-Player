@@ -1,96 +1,28 @@
-import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Image, Platform, PermissionsAndroid, Pressable, TextInput, Button } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Text, ScrollView, Pressable, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fetchAudioFiles, fetchAudioFilesByFolder, Song } from '@gauch_99/react-native-audio-files';
-import { useNavigation } from '@react-navigation/native';
+import { Track } from "react-native-track-player";
 
-import Headphones from "../../assets/icons/headphones.svg";
-import Settings from "../../assets/icons/settings.svg";
-
-function Library() {
-    const [songs, set_songs] = useState<Song[]>([]);
-    const [input_dir, set_input_dir] = useState<string>("/");
+function Library({ route }: any) {
+    const songs: Track[] = route.params.songs;
     const navigation: any = useNavigation();
 
-    const icon_size = 40;
-
-    useEffect(() => {
-        request_permissions();
-        get_all_songs();
-    }, []);
-
-    async function request_permissions() {
-        if (Platform.OS === "android") {
-            if (Platform.Version >= 33) {
-                await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO);
-            } 
-            else {
-                await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
-            }
-        }
-    }
-
-    async function get_all_songs() {
-        const songs = await fetchAudioFiles();
-        set_songs(songs);
-    }
-
-
-    async function get_songs_from_dir() {
-        const songs = await fetchAudioFilesByFolder(input_dir);
-        set_songs(songs);
-    }
-
-
-    function redirect_to_player_with_songs(key: number) {
-        const tracks = songs_to_track();
-
+    function redirect_to_player(key: number) {
         navigation.navigate("Player", {
             key: key,
-            songs: tracks,
+            songs: songs,
         });
     }
 
-
-    function redirect_to_player() {
-        navigation.navigate("Player");
-    }
-
-
-    function songs_to_track() {
-        return songs.map((song) => ({
-            url: song.audioUrl,
-            title: song.title,
-            artist: song.artist,
-            artwork: song.imageUrl,
-        }));
-    }
-
     return (
-        <SafeAreaView style={styles.main} >
+        <SafeAreaView style={styles.main}>
             <ScrollView>
-                <View>
-                    <TextInput 
-                        placeholder='Search from folder'
-                        placeholderTextColor="white"
-                        style={styles.input}
-                        onChangeText={(text) => set_input_dir(text)}
-                        onSubmitEditing={get_songs_from_dir}
-                    />
-                </View>
-
-
-                <View style={styles.button_container} >
-                    <Pressable onPress={redirect_to_player} style={[styles.button_base, styles.player_button]}>
-                        <Headphones width={icon_size} height={icon_size} />
-                    </Pressable>
-
-                    <Pressable onPress={() => alert("Work In Progress, don't mind...")} style={[styles.button_base, styles.settings]}>
-                        <Settings width={icon_size} height={icon_size} />
-                    </Pressable>
-                </View>
-
-
+                <Pressable onPress={() => navigation.navigate("Home")}>
+                    <Text style={{color: "white"}} >Go back</Text>
+                </Pressable>
+                
+                <Text style={styles.page_title} >Your Library!</Text>
+                
                 <View style={styles.container}>
                     {songs.map((song, i) => (
                         <Pressable 
@@ -98,10 +30,10 @@ function Library() {
                                 styles.card,
                                 pressed && styles.hover_card,
                             ]}
-                            onPress={() => redirect_to_player_with_songs(i)}
+                            onPress={() => redirect_to_player(i)}
                             key={i}
                         >
-                            <Image source={{ uri: song.imageUrl }} style={styles.image} />
+                            <Image source={{ uri: song.artwork }} style={styles.image} />
                             
                             <View style={{ gap: 10 }}>
                                 <Text style={styles.title} >{song.title}</Text>
@@ -122,34 +54,10 @@ const styles = StyleSheet.create({
         padding: 15,
     },
 
-    input: {
-        backgroundColor: "#25203fff",
+    page_title: {
         color: "white",
-        paddingLeft: 20,
-        marginBottom: 15,
-        borderRadius: 50,
-    },
-
-    button_container: {
-        flexDirection: "row",
-        justifyContent: "center",
-        gap: 10,
-    },
-
-    button_base: {
-        width: "45%",
-        height: 100,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
-    },
-    
-    player_button: {
-        backgroundColor: "#C7DA54",
-    },
-
-    settings: {
-        backgroundColor: "#3ac4ffff",
+        fontSize: 30,
+        marginTop: 20,
     },
 
     container: {
@@ -186,7 +94,6 @@ const styles = StyleSheet.create({
         fontSize: 12.5,
         fontWeight: "light",
     },
-});
-
+})
 
 export default Library;
