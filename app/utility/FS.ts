@@ -20,3 +20,20 @@ export async function load_tracks(): Promise<Track[] | null> {
         return null;
     }
 }
+
+
+
+export async function clear_tracks_cache() {
+    try {
+        const file_info = await FileSystem.getInfoAsync(SONGS_PATH);
+
+        if (file_info.exists) {
+            await FileSystem.deleteAsync(SONGS_PATH, { idempotent: true });
+        } 
+        else {
+            console.log("No cache at: ", SONGS_PATH);
+        }
+    } catch (error) {
+        console.error("Error while clearing songs cache: ", error);
+    }
+}

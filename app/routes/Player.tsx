@@ -14,7 +14,6 @@ import Stop from "../../assets/icons/stop.svg";
 import Vinyl from "../../assets/icons/vinyl.svg";
 
 
-
 function Player({ route }: any) {
     const [ is_playing,     set_is_playing    ]   = useState<boolean>(true);
     const [ songs,          set_songs         ]   = useState<Track[]>([]);

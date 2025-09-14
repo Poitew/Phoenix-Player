@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable, TextInput } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchAudioFiles, Song } from '@gauch_99/react-native-audio-files';
 import { Track } from 'react-native-track-player';
@@ -74,6 +74,13 @@ function Home() {
     }
 
 
+    async function delete_cache() {
+        await FS.clear_tracks_cache();
+        const cache = await FS.load_tracks();
+        alert(`Cache cleared: ${cache}`);
+    }
+
+
     return (
         <SafeAreaView style={styles.main} >
             <ScrollView>
@@ -98,11 +105,18 @@ function Home() {
                 </View>
 
 
+                <View style={styles.cache_button_container}>
+                    <Pressable onPress={delete_cache} style={styles.cache_button} >
+                        <Text>Delete Cache</Text>
+                    </Pressable>
+                </View>
+
+
                 <View style={styles.section} >
                     <Text style={styles.section_title}>Unsure?</Text>
                     <Pressable style={styles.random_card} onPress={play_random_song} >
                         <Text style={styles.random_card_title} >Test Your Luck!</Text>
-                        <Text>Click here to play a random song from your loaded library!</Text>
+                        <Text>Click here to play a random song from your library!</Text>
                         <PlayButton style={styles.play_button} width={icon_size_lg} height={icon_size_lg} />
                     </Pressable>
                 </View>
@@ -160,6 +174,20 @@ const styles = StyleSheet.create({
 
     library_button: {
         backgroundColor: "#3ac4ffff",
+    },
+
+    cache_button_container: {
+        alignItems: "center",
+        marginTop: 20,
+    },
+
+    cache_button: {
+        width: "92.5%",
+        height: 50,
+        borderRadius: 10,
+        backgroundColor: "#cd5353ff",
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     section: {

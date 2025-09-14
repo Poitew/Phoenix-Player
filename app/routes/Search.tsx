@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as FS from "../utility/FS";
 import * as StringUtility from "../utility/String";
 import Card from "../components/Card";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 function Search() {
     const [ tracks,     set_tracks  ] = useState<Track[]>([]);
@@ -34,6 +34,12 @@ function Search() {
         }
     }
 
+    // Get the position of the song in the global array
+    function resolve_index(id: number): number {
+        const index: number = tracks.findIndex((song) => song.id === id);
+        return index;
+    }
+
 
     return (
         <SafeAreaView style={styles.main}>
@@ -59,7 +65,7 @@ function Search() {
                             tracks={tracks}
                             track={song}
                             navigation={navigation}
-                            index={i}
+                            index={resolve_index(song.id)}
                             key={i}
                         />
                     ))}

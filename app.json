@@ -27,9 +27,6 @@
       ],
       "package": "com.poitew.phoenix_player"
     },
-    "androidNavigationBar": {
-      "visible": "sticky-immersive"
-    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
