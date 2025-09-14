@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "phoenix_player",
+    "name": "Phoenix Player",
     "slug": "phoenix_player",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -32,6 +32,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "df5b1896-14ba-4dde-8369-681df2cf39d2"
+      }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

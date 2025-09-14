@@ -1,22 +1,31 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, ScrollView, Pressable, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import { Track } from "react-native-track-player";
-import Card from "../components/Card";
-
+import { useNavigation } from "@react-navigation/native";
 import * as FS from "../utility/FS";
+import * as StringUtility from "../utility/String";
+import Card from "../components/Card";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-function Library() {
-    const [ tracks, set_tracks] = useState<Track[]>([]);
+function Search() {
+    const [ tracks,     set_tracks  ] = useState<Track[]>([]);
+    const [ results,    set_results ] = useState<Track[]>([]);
+    const [ search,     set_search  ] = useState<string>("");
+
     const navigation: any = useNavigation();
 
-    
     useEffect(() => {
         get_cached_songs();
     }, []);
-    
-    
+
+
+    useEffect(() => {
+        if (tracks && search) {
+            set_results(StringUtility.search_songs(tracks!, search));
+        }
+    }, [search]);
+
+
     async function get_cached_songs() {
         const songs_cached = await FS.load_tracks();
         
@@ -25,19 +34,27 @@ function Library() {
         }
     }
 
+
     return (
         <SafeAreaView style={styles.main}>
             <ScrollView>
+                <TextInput 
+                    placeholder='Search from library'
+                    placeholderTextColor="white"
+                    style={styles.input}
+                    onChangeText={(text) => set_search(text)}
+                    autoFocus={true}
+                />
                 <View style={styles.section}>
-                    <Text style={styles.page_title} >Your Library!</Text>
+                    <Text style={styles.results} >Results</Text>
 
                     <Pressable onPress={() => navigation.navigate("Home")}>
                         <Text style={{color: "white"}} >Go back</Text>
                     </Pressable>
                 </View>
-                
-                <View style={styles.container}>
-                    {tracks.map((song, i) => (
+
+                <View>
+                    {results?.map((song, i) => (
                         <Card 
                             tracks={tracks}
                             track={song}
@@ -54,9 +71,17 @@ function Library() {
 
 const styles = StyleSheet.create({
     main: {
-        backgroundColor: "#0f0d19ff",
         minHeight: "100%",
+        backgroundColor: "#0f0d19ff",
         padding: 15,
+    },
+
+    input: {
+        backgroundColor: "#25203fff",
+        color: "white",
+        paddingLeft: 20,
+        marginBottom: 15,
+        borderRadius: 50,
     },
 
     section: {
@@ -65,16 +90,10 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
 
-    page_title: {
+    results: {
         color: "white",
         fontSize: 30,
-        marginTop: 20,
-    },
-
-    container: {
-        marginTop: 50,
-        gap: 35,
     },
 })
 
-export default Library;
+export default Search;

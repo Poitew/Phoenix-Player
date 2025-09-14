@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, Image, Platform, PermissionsAndroid, Pressable, TextInput, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable, TextInput } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { fetchAudioFiles, fetchAudioFilesByFolder, Song } from '@gauch_99/react-native-audio-files';
+import { fetchAudioFiles, Song } from '@gauch_99/react-native-audio-files';
 import { Track } from 'react-native-track-player';
 import { useNavigation } from '@react-navigation/native';
 import * as FS from "../utility/FS";
@@ -10,9 +10,11 @@ import Headphones from "../../assets/icons/headphones.svg";
 import LibraryIcon from "../../assets/icons/library.svg";
 import PlayButton from "../../assets/icons/resume.svg";
 
+import Card from '../components/Card';
+
 function Home() {
-    const [tracks, set_tracks] = useState<Track[]>([]);
-    const [input_dir, set_input_dir] = useState<string>("/");
+    const [ tracks, set_tracks] = useState<Track[]>([]);
+
     const navigation: any = useNavigation();
 
     const icon_size_lg = 60;
@@ -40,7 +42,7 @@ function Home() {
     async function get_all_tracks() {
         const songs_cached = await FS.load_tracks();
 
-        if (songs_cached) {
+        if (songs_cached && songs_cached.length) {
             set_tracks(songs_cached);
         }
         else {
@@ -52,37 +54,12 @@ function Home() {
     }
 
 
-    async function get_tracks_from_dir() {
-        const songs = await fetchAudioFilesByFolder(input_dir);
-
-        if (songs) {
-            const tracks = songs_to_track(songs);
-            set_tracks(tracks);
-            FS.save_tracks(tracks);
-            redirect_to_library();
-        }
-    }
-
-
-    function redirect_to_player(key: number) {
-        navigation.navigate("Player", {
-            key: key,
-            songs: tracks,
-        });
-    }
-
-
     function play_random_song() {
         const key = Math.floor(Math.random() * tracks.length - 1);
 
-        redirect_to_player(key);
-    }
-
-
-    function redirect_to_library() {
-        navigation.navigate("Library", {
-            songs: tracks,
-        })
+        navigation.navigate("Player", {
+            key: key,
+        });
     }
 
 
@@ -92,20 +69,20 @@ function Home() {
             title: song.title,
             artist: song.artist,
             artwork: song.imageUrl,
+            id: song.id,
         }));
     }
-    
+
 
     return (
         <SafeAreaView style={styles.main} >
             <ScrollView>
                 <View>
                     <TextInput 
-                        placeholder='Load from folder'
+                        placeholder='Search from library'
                         placeholderTextColor="white"
                         style={styles.input}
-                        onChangeText={(text) => set_input_dir(text)}
-                        onSubmitEditing={get_tracks_from_dir}
+                        onFocus={() => navigation.navigate("Search")}
                     />
                 </View>
 
@@ -115,7 +92,7 @@ function Home() {
                         <Headphones width={icon_size} height={icon_size} />
                     </Pressable>
 
-                    <Pressable onPress={redirect_to_library} style={[styles.button_base, styles.library_button]}>
+                    <Pressable onPress={() => navigation.navigate("Library")} style={[styles.button_base, styles.library_button]}>
                         <LibraryIcon width={icon_size} height={icon_size} />
                     </Pressable>
                 </View>
@@ -132,23 +109,15 @@ function Home() {
 
 
                 <View style={styles.container}>
-                    <Text style={styles.section_title}>Latest loaded songs!</Text>
+                    <Text style={styles.section_title}>Latest songs!</Text>
                     {tracks.slice(0, 10).map((song, i) => (
-                        <Pressable 
-                            style={({ pressed }) => [
-                                styles.card,
-                                pressed && styles.hover_card,
-                            ]}
-                            onPress={() => redirect_to_player(i)}
+                        <Card
+                            tracks={tracks}
+                            track={song}
+                            index={i}
+                            navigation={navigation}
                             key={i}
-                        >
-                            <Image source={{ uri: song.artwork }} style={styles.image} />
-                            
-                            <View style={{ gap: 10 }}>
-                                <Text style={styles.title} >{song.title}</Text>
-                                <Text style={styles.artist} >{song.artist}</Text>
-                            </View>
-                        </Pressable>
+                        />
                     ))}
                 </View>
             </ScrollView>
@@ -223,36 +192,6 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 50,
         gap: 35,
-    },
-
-    card: {
-        padding: 5,
-        borderRadius: 7.5,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 15,
-    },
-
-    hover_card: {
-        backgroundColor: "#231e39ff",
-    },
-
-    image: {
-        width: 60,
-        height: 60,
-        borderRadius: 15
-    },
-
-    title: {
-        color: "white",
-        fontSize: 17.5,
-        fontWeight: "bold",
-    },
-
-    artist: {
-        color: "white",
-        fontSize: 12.5,
-        fontWeight: "light",
     },
 });
 

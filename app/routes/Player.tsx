@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import TrackPlayer, { Event, Track, useProgress } from 'react-native-track-player';
 import Slider from '@react-native-community/slider';
 import seconds_to_time from '../utility/SecondsToTime';
-
+import * as FS from "../utility/FS";
 
 import SkipNext from "../../assets/icons/skip.svg";
 import SkipBack from "../../assets/icons/skip-back.svg";
@@ -14,9 +14,10 @@ import Stop from "../../assets/icons/stop.svg";
 import Vinyl from "../../assets/icons/vinyl.svg";
 
 
+
 function Player({ route }: any) {
     const [ is_playing,     set_is_playing    ]   = useState<boolean>(true);
-    const [ songs                             ]   = useState<Track[]>(route.params?.songs);
+    const [ songs,          set_songs         ]   = useState<Track[]>([]);
     const [ current_song,   set_current_song  ]   = useState<Track>();
 
     const { position, duration } = useProgress();
@@ -28,6 +29,7 @@ function Player({ route }: any) {
 
 
     useEffect(() => {
+        get_cached_songs();
         get_playing_track();
 
         const listener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async () => {
@@ -40,10 +42,19 @@ function Player({ route }: any) {
     
 
     useEffect(() => {
-        if (route.params?.songs && typeof route.params.key === "number") {
+        if (songs && typeof route.params?.key === "number") {
             add_queue();
         }
-    }, [route.params?.key]);
+    }, [route.params?.key, songs]);
+
+
+    async function get_cached_songs() {
+        const songs_cached = await FS.load_tracks();
+        
+        if (songs_cached && songs_cached.length) {
+            set_songs(songs_cached);
+        }
+    }
 
 
     async function get_playing_track() {
