@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import TrackPlayer, { Event, Track, useProgress } from 'react-native-track-player';
-import Slider from '@react-native-community/slider';
+import { Slider } from '@miblanchard/react-native-slider';
 import seconds_to_time from '../utility/SecondsToTime';
 import * as FS from "../utility/FS";
 
@@ -104,14 +104,14 @@ function Player({ route }: any) {
 
             <View style={styles.slider_container}>
                 <Slider
-                    style={styles.slider}
+                    trackStyle={styles.slider}
                     minimumValue={0}
                     minimumTrackTintColor={yellow}
                     maximumValue={duration}
                     maximumTrackTintColor="white"
                     thumbTintColor={yellow}
                     value={position}
-                    onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
+                    onSlidingComplete={(value) => TrackPlayer.seekTo(value[0])}
                     step={1}
                 />
 
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     },
 
     slider: {
-        width: "100%",
+        width: 300,
     },
 
     info_slider: {
