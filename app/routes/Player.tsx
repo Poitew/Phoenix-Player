@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import TrackPlayer, { Event, Track, useProgress } from 'react-native-track-player';
 import { Slider } from '@miblanchard/react-native-slider';
+
 import seconds_to_time from '../utility/SecondsToTime';
 import * as FS from "../utility/FS";
 
@@ -15,7 +16,7 @@ import Vinyl from "../../assets/icons/vinyl.svg";
 
 
 function Player({ route }: any) {
-    const [ is_playing,     set_is_playing    ]   = useState<boolean>(true);
+    const [ is_playing,     set_is_playing    ]   = useState<boolean>(false);
     const [ songs,          set_songs         ]   = useState<Track[]>([]);
     const [ current_song,   set_current_song  ]   = useState<Track>();
 
@@ -33,7 +34,11 @@ function Player({ route }: any) {
 
         const listener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async () => {
             const current_track = await TrackPlayer.getActiveTrack();
-            set_current_song(current_track);
+
+            if (current_track) {
+                set_current_song(current_track);
+                FS.save_current_track(current_track);
+            }
         });
 
         return () => listener.remove();
@@ -41,15 +46,23 @@ function Player({ route }: any) {
     
 
     useEffect(() => {
-        if (songs && typeof route.params?.key === "number") {
+        if (songs) {
             add_queue();
         }
     }, [route.params?.key, songs]);
 
 
     async function get_cached_songs() {
-        const songs_cached = await FS.load_tracks();
-        
+        const folder = route.params?.folder;
+        let songs_cached;
+
+        if (folder) {
+            songs_cached = await FS.load_specific_folder(folder);
+        }
+        else {
+            songs_cached = await FS.load_tracks(); 
+        }
+
         if (songs_cached && songs_cached.length) {
             set_songs(songs_cached);
         }
@@ -69,8 +82,25 @@ function Player({ route }: any) {
     async function add_queue() {
         await TrackPlayer.reset();
         await TrackPlayer.add(songs);
-        await TrackPlayer.skip(route.params.key);
-        await TrackPlayer.play();
+        let index: number = 0;
+
+        if (route.params?.key) {
+            const song_id = route.params.key;
+            index = songs.findIndex((song) => song.id === song_id);
+        }
+        else {
+            const current_track = await FS.load_current_track();
+
+            if (current_track != null) {
+                index = songs.findIndex((song) => song.id === current_track.id);
+            }
+        }
+        
+        if (index >= 0) {
+            await TrackPlayer.skip(index);
+            await TrackPlayer.play();
+            set_is_playing(true);
+        }
     }
 
 
@@ -83,7 +113,7 @@ function Player({ route }: any) {
 
     return (
         <SafeAreaView style={styles.main}>
-            <Pressable onPress={() => navigation.navigate("Home")} >
+            <Pressable onPress={() => navigation.navigate("HomeStack")} >
                 <Text style={{color: "white"}}>Go back</Text>
             </Pressable>
 

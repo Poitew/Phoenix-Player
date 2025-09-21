@@ -13,7 +13,7 @@ import PlayButton from "../../assets/icons/resume.svg";
 import Card from '../components/Card';
 
 function Home() {
-    const [ tracks, set_tracks] = useState<Track[]>([]);
+    const [ tracks, set_tracks ] = useState<Track[]>([]);
 
     const navigation: any = useNavigation();
 
@@ -55,7 +55,8 @@ function Home() {
 
 
     function play_random_song() {
-        const key = Math.floor(Math.random() * tracks.length - 1);
+        const song_index = Math.floor(Math.random() * tracks.length - 1);
+        const key = tracks[song_index].id;
 
         navigation.navigate("Player", {
             key: key,
@@ -73,20 +74,12 @@ function Home() {
         }));
     }
 
-
-    async function delete_cache() {
-        await FS.clear_tracks_cache();
-        const cache = await FS.load_tracks();
-        alert(`Cache cleared: ${cache}`);
-    }
-
-
     return (
         <SafeAreaView style={styles.main} >
             <ScrollView>
                 <View>
                     <TextInput 
-                        placeholder='Search from library'
+                        placeholder='Search from complete library'
                         placeholderTextColor="white"
                         style={styles.input}
                         onFocus={() => navigation.navigate("Search")}
@@ -97,20 +90,14 @@ function Home() {
                 <View style={styles.button_container} >
                     <Pressable onPress={() => navigation.navigate("Player")} style={[styles.button_base, styles.player_button]}>
                         <Headphones width={icon_size} height={icon_size} />
+                        <Text>Player</Text>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate("Library")} style={[styles.button_base, styles.library_button]}>
                         <LibraryIcon width={icon_size} height={icon_size} />
+                        <Text>Library</Text>
                     </Pressable>
                 </View>
-
-
-                <View style={styles.cache_button_container}>
-                    <Pressable onPress={delete_cache} style={styles.cache_button} >
-                        <Text>Delete Cache</Text>
-                    </Pressable>
-                </View>
-
 
                 <View style={styles.section} >
                     <Text style={styles.section_title}>Unsure?</Text>
@@ -126,10 +113,8 @@ function Home() {
                     <Text style={styles.section_title}>Latest songs!</Text>
                     {tracks.slice(0, 10).map((song, i) => (
                         <Card
-                            tracks={tracks}
-                            track={song}
-                            index={i}
                             navigation={navigation}
+                            track={song}
                             key={i}
                         />
                     ))}
@@ -174,20 +159,6 @@ const styles = StyleSheet.create({
 
     library_button: {
         backgroundColor: "#3ac4ffff",
-    },
-
-    cache_button_container: {
-        alignItems: "center",
-        marginTop: 20,
-    },
-
-    cache_button: {
-        width: "92.5%",
-        height: 50,
-        borderRadius: 10,
-        backgroundColor: "#cd5353ff",
-        alignItems: "center",
-        justifyContent: "center",
     },
 
     section: {

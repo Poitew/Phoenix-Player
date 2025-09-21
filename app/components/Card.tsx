@@ -3,15 +3,15 @@ import { Track } from "react-native-track-player";
 
 interface CardProps {
     navigation: any,
-    tracks: Track[],
     track: Track,
-    index: number,
+    folder?: string
 }
 
-function Card({ navigation, track, index  }: CardProps) {
+function Card({ navigation, track, folder  }: CardProps) {
     function redirect_to_player(key: number) {
         navigation.navigate("Player", {
             key: key,
+            folder: folder || ""
         });
     }
 
@@ -21,7 +21,7 @@ function Card({ navigation, track, index  }: CardProps) {
                 styles.card,
                 pressed && styles.hover_card,
             ]}
-            onPress={() => redirect_to_player(index)}
+            onPress={() => redirect_to_player(track.id)}
         >
             <Image source={{ uri: track.artwork }} style={styles.image} />
             

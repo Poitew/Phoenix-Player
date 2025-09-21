@@ -1,34 +1,80 @@
 import { createStaticNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../routes/Home";
 import MusicPlayer from "../routes/Player";
 import Library from "../routes/Library";
+import Folder from "../routes/Folder";
 import Search from "../routes/Search";
+import Settings from "../routes/Settings";
 
-const router = createStackNavigator({
+import HomeIcon from "../../assets/icons/home.svg";
+import SettingsIcon from "../../assets/icons/settings.svg";
+
+const screen_options = {
+    tabBarShowLabel: false,
+    headerShown: false,
+    tabBarActiveTintColor: '#C7DA54',
+    tabBarStyle: {
+        backgroundColor: '#161427',
+        borderTopWidth: 0,
+        height: 60,
+    },
+    tabBarItemStyle: {
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+}
+
+const router_bottom_tabs = createBottomTabNavigator({
     screens: {
-        Home: Home,
-        Player: MusicPlayer,
+        Home: {
+            screen: Home,
+
+            options: {
+                tabBarIcon: ({size}) => ( 
+                    <HomeIcon width={size} height={size} />
+                ),
+            },
+        },
+
+        Settings: {
+            screen: Settings,
+
+            options: {
+                tabBarIcon: ({size}) => ( 
+                    <SettingsIcon width={size} height={size} />
+                ),
+            },
+        },
+    },
+
+    screenOptions: screen_options,
+})
+
+const router_stack = createStackNavigator({
+    screens: {
+        HomeStack: router_bottom_tabs,
+        
+        Player: {
+            screen: MusicPlayer,
+            options: {
+                animation: "reveal_from_bottom"
+            }
+        },
+
         Library: Library,
+        Folder: Folder,
+
         Search: {
             screen: Search,
             options: {
                 animation: "fade_from_bottom",
-            }
+            },
         },
     },
 
-    screenOptions: {
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarActiveTintColor: '#C7DA54',
-        tabBarStyle: {
-            backgroundColor: '#4f2c50ff',
-            borderTopWidth: 0,
-        },
-    },
+    screenOptions: screen_options,
 });
 
-const Navigation = createStaticNavigation(router);
-
-export default Navigation;
+export const Navigation = createStaticNavigation(router_stack);

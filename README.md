@@ -8,7 +8,7 @@
         <img src="https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37"/>
         <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
     </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 10%">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10%; margin: 5% 0">
         <img src="./assets/ss/Home.jpg" alt="Home Screen"  width="300" height="auto" />
         <img src="./assets/ss/Player.jpg" alt="Player Screen"  width="300" height="auto" />
     </div>
@@ -21,6 +21,7 @@
     <ul>
         <li>🔍 Autoscan of Android MediaStore.Audio</li>
         <li>🚀 Tracks caching for fast retrivial</li>
+        <li>📁 Playlists as Folders</li>
         <li>🛜 Offline Play</li>
         <li>🛃 Notification media control</li>
         <li>🔬 Search functionality</li>

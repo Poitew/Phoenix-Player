@@ -9,3 +9,17 @@ export function search_songs(songs: Track[], query: string) {
     const results = songs.filter(song => normalize(song.title!).includes(q));
     return results;
 }
+
+export function divide_songs_in_folder(songs: Track[]): Record<string, Track[]> {
+    return songs.reduce<Record<string, Track[]>>((acc, song) => {
+        const match = song.url.match(/\/([^/]+)\/[^/]+\.mp3$/);
+        const folder = match ? match[1] : "unknown";
+
+        if (!acc[folder]) {
+            acc[folder] = [];
+        }
+
+        acc[folder].push(song);
+        return acc;
+    }, {});
+}

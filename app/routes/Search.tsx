@@ -34,18 +34,12 @@ function Search() {
         }
     }
 
-    // Get the position of the song in the global array
-    function resolve_index(id: number): number {
-        const index: number = tracks.findIndex((song) => song.id === id);
-        return index;
-    }
-
 
     return (
         <SafeAreaView style={styles.main}>
             <ScrollView>
                 <TextInput 
-                    placeholder='Search from library'
+                    placeholder='Search from complete library'
                     placeholderTextColor="white"
                     style={styles.input}
                     onChangeText={(text) => set_search(text)}
@@ -54,7 +48,7 @@ function Search() {
                 <View style={styles.section}>
                     <Text style={styles.results} >Results</Text>
 
-                    <Pressable onPress={() => navigation.navigate("Home")}>
+                    <Pressable onPress={() => navigation.navigate("HomeStack")}>
                         <Text style={{color: "white"}} >Go back</Text>
                     </Pressable>
                 </View>
@@ -62,10 +56,8 @@ function Search() {
                 <View>
                     {results?.map((song, i) => (
                         <Card 
-                            tracks={tracks}
                             track={song}
                             navigation={navigation}
-                            index={resolve_index(song.id)}
                             key={i}
                         />
                     ))}

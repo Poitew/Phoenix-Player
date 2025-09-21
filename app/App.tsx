@@ -3,7 +3,7 @@ import { AppState } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 import TrackPlayer, { Capability } from "react-native-track-player";
-import Navigation from "./router/router";
+import { Navigation } from "./router/router";
 
 export default function App() {
     useEffect(() => {
