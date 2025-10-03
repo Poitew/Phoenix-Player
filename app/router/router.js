@@ -12,69 +12,58 @@ import HomeIcon from "../../assets/icons/home.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
 
 const screen_options = {
-    tabBarShowLabel: false,
-    headerShown: false,
-    tabBarActiveTintColor: '#C7DA54',
-    tabBarStyle: {
-        backgroundColor: '#161427',
-        borderTopWidth: 0,
-        height: 60,
-    },
-    tabBarItemStyle: {
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-}
+	tabBarShowLabel: false,
+	headerShown: false,
+	tabBarActiveTintColor: "#C7DA54",
+	tabBarStyle: {
+		backgroundColor: "#161427",
+		borderTopWidth: 0,
+		height: 60,
+	},
+	tabBarItemStyle: {
+		alignItems: "center",
+		flexDirection: "row",
+	},
+};
 
 const router_bottom_tabs = createBottomTabNavigator({
-    screens: {
-        Home: {
-            screen: Home,
+	screens: {
+		Home: {
+			screen: Home,
 
-            options: {
-                tabBarIcon: ({size}) => ( 
-                    <HomeIcon width={size} height={size} />
-                ),
-            },
-        },
+			options: {
+				tabBarIcon: ({ size }) => <HomeIcon width={size} height={size} />,
+			},
+		},
 
-        Settings: {
-            screen: Settings,
+		Settings: {
+			screen: Settings,
 
-            options: {
-                tabBarIcon: ({size}) => ( 
-                    <SettingsIcon width={size} height={size} />
-                ),
-            },
-        },
-    },
+			options: {
+				tabBarIcon: ({ size }) => <SettingsIcon width={size} height={size} />,
+			},
+		},
+	},
 
-    screenOptions: screen_options,
-})
+	screenOptions: screen_options,
+});
 
 const router_stack = createStackNavigator({
-    screens: {
-        HomeStack: router_bottom_tabs,
-        
-        Player: {
-            screen: MusicPlayer,
-            options: {
-                animation: "reveal_from_bottom"
-            }
-        },
+	screens: {
+		HomeStack: router_bottom_tabs,
 
-        Library: Library,
-        Folder: Folder,
+		Library: Library,
+		Folder: Folder,
 
-        Search: {
-            screen: Search,
-            options: {
-                animation: "fade_from_bottom",
-            },
-        },
-    },
+		Search: {
+			screen: Search,
+			options: {
+				animation: "fade_from_bottom",
+			},
+		},
+	},
 
-    screenOptions: screen_options,
+	screenOptions: screen_options,
 });
 
 export const Navigation = createStaticNavigation(router_stack);

@@ -9,8 +9,9 @@
         <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
     </div>
     <div style="display: flex; align-items: center; justify-content: center; gap: 10%; margin: 5% 0">
-        <img src="./assets/ss/Home.jpg" alt="Home Screen"  width="300" height="auto" />
-        <img src="./assets/ss/Player.jpg" alt="Player Screen"  width="300" height="auto" />
+        <img src="./assets/ss/Home.webp" alt="Home Screen"  width="200" height="auto" />
+        <img src="./assets/ss/HalfHome.webp" alt="Home Screen"  width="200" height="auto" />
+        <img src="./assets/ss/Player.webp" alt="Player Screen"  width="200" height="auto" />
     </div>
 </div>
 

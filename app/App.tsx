@@ -6,40 +6,35 @@ import TrackPlayer, { Capability } from "react-native-track-player";
 import { Navigation } from "./router/router";
 
 export default function App() {
-    useEffect(() => {
-        hide_navbar();
-        setup_player();
+	useEffect(() => {
+		hide_navbar();
+		setup_player();
 
-        const listener = AppState.addEventListener("change", (state) => {
-            if (state === "active") {
-                hide_navbar();
-            }
-        });
+		const listener = AppState.addEventListener("change", (state) => {
+			if (state === "active") {
+				hide_navbar();
+			}
+		});
 
-        return () => listener.remove();
-    }, []);
+		return () => listener.remove();
+	}, []);
 
-    async function setup_player() {
-        await TrackPlayer.setupPlayer();
+	async function setup_player() {
+		await TrackPlayer.setupPlayer();
 
-        TrackPlayer.updateOptions({
-            capabilities: [
-                Capability.Play,
-                Capability.Pause,
-                Capability.SkipToNext,
-                Capability.SkipToPrevious,
-            ],
-        });
-    }
+		TrackPlayer.updateOptions({
+			capabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+		});
+	}
 
-    async function hide_navbar() {
-        await NavigationBar.setVisibilityAsync("hidden");
-    }
+	async function hide_navbar() {
+		await NavigationBar.setVisibilityAsync("hidden");
+	}
 
-    return (
-        <>
-            <StatusBar style="light" />
-            <Navigation />
-        </>
-    );
+	return (
+		<>
+			<StatusBar style="light" />
+			<Navigation />
+		</>
+	);
 }

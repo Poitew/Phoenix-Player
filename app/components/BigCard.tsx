@@ -1,21 +1,16 @@
 import { Pressable, Image, View, Text, StyleSheet } from "react-native";
 import { Track } from "react-native-track-player";
+import * as String from "../utility/String";
 
 interface CardProps {
-	navigation: any;
 	track: Track;
 	folder?: string;
+	set_key: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function Card({ navigation, track, folder }: CardProps) {
+function BigCard({ track, set_key }: CardProps) {
 	function redirect_to_player(key: number) {
-		navigation.navigate("HomeStack", {
-			screen: "Home",
-			params: {
-				key: key,
-				folder: folder || "",
-			},
-		});
+		set_key(key);
 	}
 
 	return (
@@ -25,9 +20,18 @@ function Card({ navigation, track, folder }: CardProps) {
 		>
 			<Image source={{ uri: track.artwork }} style={styles.image} />
 
-			<View style={{ gap: 10 }}>
-				<Text style={styles.title}>{track.title}</Text>
-				<Text style={styles.artist}>{track.artist}</Text>
+			<View>
+				{track.title?.length! > 15 ? (
+					<Text style={styles.title}>{String.truncate_string(track.title!)}</Text>
+				) : (
+					<Text style={styles.title}>{track.title}</Text>
+				)}
+
+				{track.artist?.length! > 15 ? (
+					<Text style={styles.artist}>{String.truncate_string(track.artist!)}</Text>
+				) : (
+					<Text style={styles.artist}>{track.artist}</Text>
+				)}
 			</View>
 		</Pressable>
 	);
@@ -37,8 +41,6 @@ const styles = StyleSheet.create({
 	card: {
 		padding: 5,
 		borderRadius: 7.5,
-		flexDirection: "row",
-		alignItems: "center",
 		gap: 15,
 	},
 
@@ -47,9 +49,9 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		width: 60,
-		height: 60,
-		borderRadius: 15,
+		width: 150,
+		height: 150,
+		borderRadius: 10,
 	},
 
 	title: {
@@ -65,4 +67,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Card;
+export default BigCard;

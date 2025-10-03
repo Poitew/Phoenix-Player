@@ -1,10 +1,10 @@
-import { enableScreens } from 'react-native-screens';
+import { enableScreens } from "react-native-screens";
 enableScreens();
 
-import TrackPlayer from 'react-native-track-player';
-import { PlaybackService } from './app/services/PlaybackService';
-import { registerRootComponent } from 'expo';
-import App from './app/App';
+import TrackPlayer from "react-native-track-player";
+import { PlaybackService } from "./app/services/PlaybackService";
+import { registerRootComponent } from "expo";
+import App from "./app/App";
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
