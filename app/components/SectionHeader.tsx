@@ -16,7 +16,9 @@ function SectionHeader({ title, route }: SectionHeaderProps) {
 	return (
 		<View>
 			<Pressable style={styles.section} onPress={() => navigation.navigate(route)}>
-				<Text style={styles.page_title}>{title}</Text>
+				<Text numberOfLines={1} style={styles.page_title}>
+					{title}
+				</Text>
 
 				<GoBack width={icon_size} height={icon_size} />
 			</Pressable>
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
 	},
 
 	page_title: {
+		flex: 1,
 		color: "white",
 		fontSize: 30,
 	},

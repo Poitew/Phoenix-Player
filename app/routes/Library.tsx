@@ -41,7 +41,12 @@ function Library() {
 				<View style={styles.container}>
 					{folders &&
 						Object.entries(folders).map(([folder], index) => (
-							<FolderCard navigation={navigation} folder={folder} key={index} />
+							<FolderCard
+								navigation={navigation}
+								folder={folder}
+								tracks_count={folders[folder].length}
+								key={index}
+							/>
 						))}
 				</View>
 			</ScrollView>

@@ -21,17 +21,7 @@ function BigCard({ track, set_key }: CardProps) {
 			<Image source={{ uri: track.artwork }} style={styles.image} />
 
 			<View>
-				{track.title?.length! > 15 ? (
-					<Text style={styles.title}>{String.truncate_string(track.title!)}</Text>
-				) : (
-					<Text style={styles.title}>{track.title}</Text>
-				)}
-
-				{track.artist?.length! > 15 ? (
-					<Text style={styles.artist}>{String.truncate_string(track.artist!)}</Text>
-				) : (
-					<Text style={styles.artist}>{track.artist}</Text>
-				)}
+				<Text style={styles.title}>{String.truncate_string(track.title!, 15)}</Text>
 			</View>
 		</Pressable>
 	);
@@ -39,6 +29,7 @@ function BigCard({ track, set_key }: CardProps) {
 
 const styles = StyleSheet.create({
 	card: {
+		alignItems: "center",
 		padding: 5,
 		borderRadius: 7.5,
 		gap: 15,
@@ -49,8 +40,8 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		width: 150,
-		height: 150,
+		width: 125,
+		height: 125,
 		borderRadius: 10,
 	},
 

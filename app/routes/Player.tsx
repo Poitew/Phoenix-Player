@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, Pressable, Text, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Pressable, Text } from "react-native";
+import { Extrapolation, interpolate, SharedValue, useDerivedValue } from "react-native-reanimated";
 import TrackPlayer, { Event, Track, useProgress } from "react-native-track-player";
 import { Slider } from "@miblanchard/react-native-slider";
+import { base_styles, dynamic_styles, SCALE } from "../styles/player_styles";
+import Animated from "react-native-reanimated";
 
 import seconds_to_time from "../utility/SecondsToTime";
 import * as FS from "../utility/FS";
@@ -11,23 +13,30 @@ import SkipNext from "../../assets/icons/skip.svg";
 import SkipBack from "../../assets/icons/skip-back.svg";
 import Resume from "../../assets/icons/resume.svg";
 import Stop from "../../assets/icons/stop.svg";
-import Vinyl from "../../assets/icons/vinyl.svg";
+import GrayText from "../components/GrayText";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface PlayerProps {
 	song_key: number;
 	folder: string;
+	player_position: SharedValue<number>;
 }
 
-function Player({ song_key, folder }: PlayerProps) {
+function Player({ song_key, folder, player_position }: PlayerProps) {
 	const [is_playing, set_is_playing] = useState<boolean>(false);
 	const [songs, set_songs] = useState<Track[]>([]);
 	const [current_song, set_current_song] = useState<Track>();
 
 	const { position, duration } = useProgress();
 
+	const progress = useDerivedValue(() => interpolate(player_position.value, [SCALE, 0], [0, 1], Extrapolation.CLAMP));
+
+	const dynamic = dynamic_styles(progress);
+
 	const yellow = "#C7DA54";
-	const icon_size_lg = 75;
-	const icon_size = 50;
+	const icon_size_lg = 70;
+	const icon_size = 40;
 
 	useEffect(() => {
 		get_cached_songs();
@@ -103,22 +112,26 @@ function Player({ song_key, folder }: PlayerProps) {
 	}
 
 	return (
-		<SafeAreaView style={styles.main}>
-			{current_song?.artwork ? (
-				<Image source={{ uri: current_song.artwork }} style={styles.image} />
-			) : (
-				<Vinyl width={250} height={250} style={{ borderRadius: 100 }} />
+		<Animated.View style={[base_styles.main, dynamic.main]}>
+			{current_song?.artwork && (
+				<Animated.Image
+					resizeMethod="scale"
+					source={{ uri: current_song.artwork }}
+					style={[base_styles.image, dynamic.image]}
+				/>
 			)}
 
-			<View style={styles.info}>
-				<Text style={styles.title}>{current_song?.title || "Title"}</Text>
+			<Animated.View style={[base_styles.info, dynamic.info]}>
+				<Animated.Text numberOfLines={1} style={[base_styles.title, dynamic.title]}>
+					{current_song?.title || "Title"}
+				</Animated.Text>
 
-				<Text style={styles.artist}>{current_song?.artist || "Artist"}</Text>
-			</View>
+				<GrayText style={base_styles.artist}>{current_song?.artist || "Artist"}</GrayText>
+			</Animated.View>
 
-			<View style={styles.slider_container}>
+			<Animated.View style={[base_styles.slider_container, dynamic.slider_container]}>
 				<Slider
-					trackStyle={styles.slider}
+					trackStyle={base_styles.slider}
 					minimumValue={0}
 					minimumTrackTintColor={yellow}
 					maximumValue={duration}
@@ -129,96 +142,38 @@ function Player({ song_key, folder }: PlayerProps) {
 					step={1}
 				/>
 
-				<View style={styles.info_slider}>
-					<Text style={styles.text}>{seconds_to_time(position)}</Text>
+				<View style={base_styles.info_slider}>
+					<Text style={base_styles.text}>{seconds_to_time(position)}</Text>
 
-					<Text style={styles.text}>{seconds_to_time(duration)}</Text>
+					<Text style={base_styles.text}>{seconds_to_time(duration)}</Text>
 				</View>
-			</View>
+			</Animated.View>
 
-			<View style={styles.buttons}>
-				<Pressable onPress={async () => await TrackPlayer.skipToPrevious()}>
+			<View style={base_styles.buttons}>
+				<AnimatedPressable
+					style={[base_styles.skip_btn, dynamic.skip_btn]}
+					onPress={async () => await TrackPlayer.skipToPrevious()}
+				>
 					<SkipBack width={icon_size} height={icon_size} />
-				</Pressable>
+				</AnimatedPressable>
 
-				<Pressable style={styles.play_button} onPress={handle_play}>
+				<AnimatedPressable style={[base_styles.play_button, dynamic.play_button]} onPress={handle_play}>
 					{is_playing ? (
 						<Stop width={icon_size_lg} height={icon_size_lg} />
 					) : (
 						<Resume width={icon_size_lg} height={icon_size_lg} />
 					)}
-				</Pressable>
+				</AnimatedPressable>
 
-				<Pressable onPress={async () => await TrackPlayer.skipToNext()}>
+				<AnimatedPressable
+					style={[base_styles.skip_btn, dynamic.skip_btn]}
+					onPress={async () => await TrackPlayer.skipToNext()}
+				>
 					<SkipNext width={icon_size} height={icon_size} />
-				</Pressable>
+				</AnimatedPressable>
 			</View>
-		</SafeAreaView>
+		</Animated.View>
 	);
 }
-
-const styles = StyleSheet.create({
-	main: {
-		flex: 1,
-		minHeight: "100%",
-		backgroundColor: "#0f0d19ff",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 50,
-	},
-
-	image: {
-		width: 250,
-		height: 250,
-		borderRadius: 1000,
-	},
-
-	info: {
-		alignItems: "center",
-	},
-
-	title: {
-		color: "white",
-		fontSize: 25,
-		fontWeight: "bold",
-		textAlign: "center",
-	},
-
-	artist: {
-		color: "white",
-		fontSize: 15,
-		fontWeight: "light",
-	},
-
-	slider_container: {
-		width: "80%",
-		alignItems: "center",
-	},
-
-	slider: {
-		width: 300,
-	},
-
-	info_slider: {
-		width: "100%",
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-
-	text: {
-		color: "white",
-	},
-
-	buttons: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 30,
-	},
-
-	play_button: {
-		backgroundColor: "#C7DA54",
-		borderRadius: 100,
-	},
-});
 
 export default Player;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, TextInput } from "react-native";
+import { StyleSheet, FlatList, TextInput } from "react-native";
 import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -36,23 +36,24 @@ function Search() {
 
 	return (
 		<SafeAreaView style={styles.main}>
-			<ScrollView>
-				<TextInput
-					placeholder="Search from complete library"
-					placeholderTextColor="white"
-					style={styles.input}
-					onChangeText={(text) => set_search(text)}
-					autoFocus={true}
-				/>
+			<TextInput
+				placeholder="Search from complete library"
+				placeholderTextColor="white"
+				style={styles.input}
+				onChangeText={(text) => set_search(text)}
+				autoFocus={true}
+			/>
 
-				<SectionHeader title="Results" route="HomeStack" />
+			<SectionHeader title="Results" route="HomeStack" />
 
-				<View>
-					{results?.map((song, i) => (
-						<Card track={song} navigation={navigation} key={i} />
-					))}
-				</View>
-			</ScrollView>
+			<FlatList
+				data={results}
+				keyExtractor={(item, index) => index.toString()}
+				renderItem={({ item }) => <Card navigation={navigation} track={item} />}
+				initialNumToRender={6}
+				maxToRenderPerBatch={10}
+				removeClippedSubviews={true}
+			/>
 		</SafeAreaView>
 	);
 }

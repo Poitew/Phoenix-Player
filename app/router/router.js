@@ -2,7 +2,6 @@ import { createStaticNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../routes/Home";
-import MusicPlayer from "../routes/Player";
 import Library from "../routes/Library";
 import Folder from "../routes/Folder";
 import Search from "../routes/Search";
@@ -33,6 +32,7 @@ const router_bottom_tabs = createBottomTabNavigator({
 
 			options: {
 				tabBarIcon: ({ size }) => <HomeIcon width={size} height={size} />,
+				animation: "shift",
 			},
 		},
 
@@ -41,6 +41,7 @@ const router_bottom_tabs = createBottomTabNavigator({
 
 			options: {
 				tabBarIcon: ({ size }) => <SettingsIcon width={size} height={size} />,
+				animation: "shift",
 			},
 		},
 	},

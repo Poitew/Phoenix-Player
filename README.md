@@ -10,7 +10,6 @@
     </div>
     <div style="display: flex; align-items: center; justify-content: center; gap: 10%; margin: 5% 0">
         <img src="./assets/ss/Home.webp" alt="Home Screen"  width="200" height="auto" />
-        <img src="./assets/ss/HalfHome.webp" alt="Home Screen"  width="200" height="auto" />
         <img src="./assets/ss/Player.webp" alt="Player Screen"  width="200" height="auto" />
     </div>
 </div>
@@ -22,7 +21,7 @@
     <ul>
         <li>🔍 Autoscan of Android MediaStore.Audio</li>
         <li>🚀 Tracks caching for fast retrivial</li>
-        <li>📁 Playlists as Folders</li>
+        <li>📁 Folders as Playlists</li>
         <li>🛜 Offline Play</li>
         <li>🛃 Notification media control</li>
         <li>🔬 Search functionality</li>

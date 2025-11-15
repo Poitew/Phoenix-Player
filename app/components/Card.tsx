@@ -1,5 +1,7 @@
 import { Pressable, Image, View, Text, StyleSheet } from "react-native";
 import { Track } from "react-native-track-player";
+import GrayText from "./GrayText";
+import * as String from "../utility/String";
 
 interface CardProps {
 	navigation: any;
@@ -25,9 +27,9 @@ function Card({ navigation, track, folder }: CardProps) {
 		>
 			<Image source={{ uri: track.artwork }} style={styles.image} />
 
-			<View style={{ gap: 10 }}>
-				<Text style={styles.title}>{track.title}</Text>
-				<Text style={styles.artist}>{track.artist}</Text>
+			<View style={{ gap: 5 }}>
+				<Text style={styles.title}>{String.truncate_string(track.title!, 30)}</Text>
+				<GrayText style={styles.artist}>{track.artist}</GrayText>
 			</View>
 		</Pressable>
 	);
@@ -47,19 +49,18 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		width: 60,
-		height: 60,
-		borderRadius: 15,
+		width: 55,
+		height: 55,
+		borderRadius: 5,
 	},
 
 	title: {
 		color: "white",
-		fontSize: 17.5,
+		fontSize: 16.5,
 		fontWeight: "bold",
 	},
 
 	artist: {
-		color: "white",
 		fontSize: 12.5,
 		fontWeight: "light",
 	},

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +17,11 @@ function Folder({ route }: any) {
 		get_tracks();
 	});
 
+	const render_item = useCallback(
+		({ item }: any) => <Card navigation={navigation} track={item} folder={folder} />,
+		[tracks],
+	);
+
 	async function get_tracks() {
 		const folder_content = await FS.load_specific_folder(folder);
 
@@ -31,12 +36,12 @@ function Folder({ route }: any) {
 
 			<FlatList
 				data={tracks}
-				keyExtractor={(item, index) => index.toString()}
-				renderItem={({ item }) => <Card navigation={navigation} track={item} folder={folder} />}
-				initialNumToRender={6}
+				keyExtractor={(item: Track, index: number) => index.toString()}
+				renderItem={render_item}
+				initialNumToRender={8}
 				maxToRenderPerBatch={10}
-				removeClippedSubviews={true}
 				contentContainerStyle={styles.container}
+				removeClippedSubviews={true}
 			/>
 		</SafeAreaView>
 	);
@@ -50,8 +55,8 @@ const styles = StyleSheet.create({
 	},
 
 	container: {
-		marginTop: 50,
-		gap: 35,
+		paddingBottom: 75,
+		gap: 25,
 	},
 });
 
