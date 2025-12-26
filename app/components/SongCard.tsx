@@ -10,7 +10,7 @@ interface CardProps {
 	from_search?: boolean;
 }
 
-function Card({ navigation, track, folder, from_search = false }: CardProps) {
+function SongCard({ navigation, track, folder, from_search = false }: CardProps) {
 	function redirect_to_player(key: number) {
 		if (from_search) {
 			navigation.navigate("Home", {
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Card;
+export default SongCard;

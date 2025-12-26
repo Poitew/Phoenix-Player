@@ -4,7 +4,7 @@ import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
-import Card from "../components/CardSong";
+import SongCard from "../components/SongCard";
 
 import * as FS from "../utility/FS";
 import * as StringUtility from "../utility/String";
@@ -48,7 +48,7 @@ function Search() {
 			<FlatList
 				data={results}
 				keyExtractor={(item, index) => index.toString()}
-				renderItem={({ item }) => <Card from_search={true} navigation={navigation} track={item} />}
+				renderItem={({ item }) => <SongCard from_search={true} navigation={navigation} track={item} />}
 				initialNumToRender={6}
 				maxToRenderPerBatch={10}
 				removeClippedSubviews={true}

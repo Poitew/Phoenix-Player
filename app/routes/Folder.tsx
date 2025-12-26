@@ -4,7 +4,7 @@ import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
-import Card from "../components/CardSong";
+import SongCard from "../components/SongCard";
 
 import * as FS from "../utility/FS";
 
@@ -18,7 +18,7 @@ function Folder({ route }: any) {
 	});
 
 	const render_item = useCallback(
-		({ item }: any) => <Card navigation={navigation} track={item} folder={folder} />,
+		({ item }: any) => <SongCard navigation={navigation} track={item} folder={folder} />,
 		[tracks],
 	);
 

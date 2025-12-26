@@ -15,7 +15,7 @@ import * as FS from "../utility/FS";
 import * as String from "../utility/String";
 
 import LibraryIcon from "../../assets/icons/library.svg";
-import BigCard from "../components/BigCardSong";
+import BigCard from "../components/BigSongCard";
 
 function Home({ route }: any) {
 	const [folders, set_folders] = useState<Record<string, Track[]> | null>();
