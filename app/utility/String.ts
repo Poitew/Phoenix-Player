@@ -28,6 +28,6 @@ export function divide_songs_in_folder(songs: Track[]): Record<string, Track[]> 
 }
 
 export function truncate_string(str: string, n: number) {
-	if (str.length > n) return str.slice(0, n) + "...";
+	if (str.length > n && str.length != n + 1) return str.slice(0, n) + "...";
 	else return str;
 }

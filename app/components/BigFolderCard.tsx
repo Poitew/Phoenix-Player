@@ -7,10 +7,11 @@ import * as String from "../utility/String";
 interface FolderCardProps {
 	navigation: any;
 	folder: string;
+	tracks_count: number;
 	track_artwork: string | undefined;
 }
 
-function FolderCard({ navigation, folder, track_artwork }: FolderCardProps) {
+function BigFolderCard({ navigation, folder, tracks_count, track_artwork }: FolderCardProps) {
 	const icon_size = 50;
 
 	return (
@@ -22,7 +23,8 @@ function FolderCard({ navigation, folder, track_artwork }: FolderCardProps) {
 			)}
 
 			<View>
-				<Text style={{ color: "white" }}>{String.truncate_string(folder, 13)}</Text>
+				<Text style={styles.title}>{String.truncate_string(folder, 20)}</Text>
+				<GrayText>{tracks_count} Songs</GrayText>
 			</View>
 		</Pressable>
 	);
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
 		minWidth: "45%",
 		flex: 1,
 		flexShrink: 0,
-		backgroundColor: "#232423ff",
 		padding: 1,
 		borderRadius: 5,
 		overflow: "hidden",
@@ -43,10 +44,15 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		width: 50,
-		height: 50,
+		width: 75,
+		height: 76,
 		borderRadius: 5,
+	},
+
+	title: {
+		color: "white",
+		fontSize: 20,
 	},
 });
 
-export default FolderCard;
+export default BigFolderCard;

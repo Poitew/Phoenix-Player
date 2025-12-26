@@ -8,6 +8,7 @@ import Search from "../routes/Search";
 import Settings from "../routes/Settings";
 
 import HomeIcon from "../../assets/icons/home.svg";
+import SearchIcon from "../../assets/icons/search.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
 
 const screen_options = {
@@ -36,6 +37,14 @@ const router_bottom_tabs = createBottomTabNavigator({
 			},
 		},
 
+		Search: {
+			screen: Search,
+			options: {
+				tabBarIcon: ({ size }) => <SearchIcon width={size} height={size} />,
+				animation: "shift",
+			},
+		},
+
 		Settings: {
 			screen: Settings,
 
@@ -55,13 +64,6 @@ const router_stack = createStackNavigator({
 
 		Library: Library,
 		Folder: Folder,
-
-		Search: {
-			screen: Search,
-			options: {
-				animation: "fade_from_bottom",
-			},
-		},
 	},
 
 	screenOptions: screen_options,

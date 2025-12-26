@@ -5,7 +5,7 @@ import * as FS from "../utility/FS";
 function Settings() {
 	async function delete_cache() {
 		await FS.clear_tracks_cache();
-		await FS.clear_songs_folder();
+		await FS.clear_folders();
 		alert(`Cache cleared`);
 	}
 

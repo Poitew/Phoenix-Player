@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable, TextInput } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
@@ -8,15 +8,17 @@ import { fetchAudioFiles, Song } from "@gauch_99/react-native-audio-files";
 import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import BlackText from "../components/BlackText";
-import BigCard from "../components/BigCard";
+import FolderCard from "../components/FolderCard";
 import Player from "./Player";
+
 import * as FS from "../utility/FS";
+import * as String from "../utility/String";
 
 import LibraryIcon from "../../assets/icons/library.svg";
-import PlayButton from "../../assets/icons/resume.svg";
+import BigCard from "../components/BigCardSong";
 
 function Home({ route }: any) {
-	const [tracks, set_tracks] = useState<Track[]>([]);
+	const [folders, set_folders] = useState<Record<string, Track[]> | null>();
 	const [key, set_key] = useState<number>(route?.params?.key);
 	const [folder] = useState<string>(route?.params?.folder);
 
@@ -25,12 +27,15 @@ function Home({ route }: any) {
 	const navigation: any = useNavigation();
 
 	const snap_points = ["17.5%", "100%"];
-	const icon_size_lg = 50;
 	const icon_size = 40;
 
 	useEffect(() => {
+		set_key(route?.params?.key);
+	}, [route?.params?.key]);
+
+	useEffect(() => {
 		request_permissions();
-		get_all_tracks();
+		get_data();
 	}, []);
 
 	async function request_permissions() {
@@ -43,23 +48,23 @@ function Home({ route }: any) {
 		}
 	}
 
-	async function get_all_tracks() {
-		const songs_cached = await FS.load_tracks();
+	async function get_data() {
+		const record_cached = await FS.load_folders();
 
-		if (songs_cached && songs_cached.length) {
-			set_tracks(songs_cached);
+		if (record_cached === null) {
+			const songs_cached = await FS.load_tracks();
+
+			if (songs_cached && songs_cached.length) {
+				const record = String.divide_songs_in_folder(songs_cached);
+				FS.save_folders(record);
+				set_folders(record);
+			} else {
+				const songs = await fetchAudioFiles();
+				const tracks = songs_to_track(songs);
+				FS.save_tracks(tracks);
+			}
 		} else {
-			const songs = await fetchAudioFiles();
-			const tracks = songs_to_track(songs);
-			set_tracks(tracks);
-			FS.save_tracks(tracks);
-		}
-	}
-
-	function play_random_song() {
-		if (tracks && tracks.length > 0) {
-			const song_index = Math.floor(Math.random() * tracks.length - 1);
-			set_key(tracks[song_index].id);
+			set_folders(record_cached);
 		}
 	}
 
@@ -76,13 +81,18 @@ function Home({ route }: any) {
 	return (
 		<GestureHandlerRootView>
 			<SafeAreaView style={styles.main}>
-				<View>
-					<TextInput
-						placeholder="Search from complete library"
-						placeholderTextColor="white"
-						style={styles.input}
-						onFocus={() => navigation.navigate("Search")}
-					/>
+				<View style={styles.grid}>
+					{folders &&
+						Object.entries(folders)
+							.slice(0, 4)
+							.map(([folder], index) => (
+								<FolderCard
+									navigation={navigation}
+									folder={folder}
+									track_artwork={folders[folder][0].artwork}
+									key={index}
+								/>
+							))}
 				</View>
 
 				<Pressable onPress={() => navigation.navigate("Library")} style={styles.button}>
@@ -91,38 +101,31 @@ function Home({ route }: any) {
 				</Pressable>
 
 				<View style={styles.section}>
-					<Text style={styles.section_title}>Unsure?</Text>
-
-					<Pressable style={styles.random_card} onPress={play_random_song}>
-						<BlackText style={styles.random_card_title}>Test Your Luck!</BlackText>
-						<BlackText>Click here to play a random song from your library!</BlackText>
-						<PlayButton style={styles.play_button} width={icon_size_lg} height={icon_size_lg} />
-					</Pressable>
-				</View>
-
-				<View style={styles.section}>
-					<Text style={styles.section_title}>Latest songs!</Text>
+					<Text style={styles.section_title}>Keep Listening</Text>
 
 					<ScrollView horizontal={true} contentContainerStyle={{ gap: 5 }}>
-						{tracks.slice(0, 10).map((song, i) => (
-							<BigCard track={song} set_key={set_key} key={i} />
-						))}
+						{folders &&
+							Object.values(folders)[0]
+								.slice(0, 10)
+								.map((folder, index) => <BigCard track={folder} key={index} set_key={set_key} />)}
 					</ScrollView>
 				</View>
 
-				<BottomSheet
-					backgroundStyle={{ backgroundColor: "#161427" }}
-					handleIndicatorStyle={{ display: "none" }}
-					ref={bottom_sheet_ref}
-					index={0}
-					snapPoints={snap_points}
-					animatedPosition={bottom_sheet_position}
-					enableOverDrag={false}
-				>
-					<BottomSheetView>
-						<Player song_key={key} folder={folder} player_position={bottom_sheet_position} />
-					</BottomSheetView>
-				</BottomSheet>
+				{key && (
+					<BottomSheet
+						backgroundStyle={{ backgroundColor: "#161427" }}
+						handleIndicatorStyle={{ display: "none" }}
+						ref={bottom_sheet_ref}
+						index={0}
+						snapPoints={snap_points}
+						animatedPosition={bottom_sheet_position}
+						enableOverDrag={false}
+					>
+						<BottomSheetView>
+							<Player song_key={key} folder={folder} player_position={bottom_sheet_position} />
+						</BottomSheetView>
+					</BottomSheet>
+				)}
 			</SafeAreaView>
 		</GestureHandlerRootView>
 	);
@@ -130,53 +133,36 @@ function Home({ route }: any) {
 
 const styles = StyleSheet.create({
 	main: {
-		backgroundColor: "#0f0d19ff",
+		backgroundColor: "#0e0c18ff",
 		minHeight: "100%",
-		padding: 15,
+		padding: 12.5,
 	},
 
-	input: {
-		backgroundColor: "#25203fff",
-		paddingLeft: 20,
-		marginBottom: 15,
-		borderRadius: 50,
+	grid: {
+		marginVertical: 30,
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: 10,
 	},
 
 	button: {
 		height: 75,
 		padding: 20,
 		borderRadius: 10,
-		backgroundColor: "#3ac4ffff",
+		backgroundColor: "#0c95cfff",
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 10,
 	},
 
 	section: {
-		marginTop: 25,
+		marginTop: 50,
 		gap: 10,
 	},
 
 	section_title: {
 		color: "white",
 		fontSize: 25,
-	},
-
-	random_card: {
-		padding: 20,
-		backgroundColor: "#ab89f4ff",
-		borderRadius: 10,
-		gap: 10,
-	},
-
-	random_card_title: {
-		fontSize: 20,
-		fontWeight: "bold",
-	},
-
-	play_button: {
-		backgroundColor: "#ffffff8d",
-		borderRadius: 100,
 	},
 });
 

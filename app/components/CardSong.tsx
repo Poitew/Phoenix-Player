@@ -7,17 +7,25 @@ interface CardProps {
 	navigation: any;
 	track: Track;
 	folder?: string;
+	from_search?: boolean;
 }
 
-function Card({ navigation, track, folder }: CardProps) {
+function Card({ navigation, track, folder, from_search = false }: CardProps) {
 	function redirect_to_player(key: number) {
-		navigation.navigate("HomeStack", {
-			screen: "Home",
-			params: {
+		if (from_search) {
+			navigation.navigate("Home", {
 				key: key,
 				folder: folder || "",
-			},
-		});
+			});
+		} else {
+			navigation.navigate("HomeStack", {
+				screen: "Home",
+				params: {
+					key: key,
+					folder: folder || "",
+				},
+			});
+		}
 	}
 
 	return (

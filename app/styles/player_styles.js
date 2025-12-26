@@ -1,18 +1,22 @@
 import { WINDOW_WIDTH } from "@gorhom/bottom-sheet";
 import { StyleSheet } from "react-native";
-import { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 
 export const SCALE = WINDOW_WIDTH * 0.9;
-const TRESHOLD = 0.3;
+const TRESHOLD = 0.1;
 
 export const base_styles = StyleSheet.create({
+	heading: {
+		color: "white",
+	},
+
 	main: {
 		backgroundColor: "#161427",
 		rowGap: 30,
 	},
 
 	image: {
-		borderRadius: 10,
+		borderRadius: 0,
 	},
 
 	info: {
@@ -61,6 +65,12 @@ export const base_styles = StyleSheet.create({
 });
 
 export const dynamic_styles = (progress) => ({
+	heading: useAnimatedStyle(() => {
+		return {
+			display: progress.value < TRESHOLD ? "none" : "contents",
+		};
+	}),
+
 	main: useAnimatedStyle(() => {
 		return {
 			paddingHorizontal: interpolate(progress.value, [0, 1], [10, 0]),
@@ -76,7 +86,7 @@ export const dynamic_styles = (progress) => ({
 		return {
 			width: interpolate(progress.value, [0, 1], [50, SCALE]),
 			height: interpolate(progress.value, [0, 1], [50, SCALE]),
-			borderRadius: interpolate(progress.value, [0, 1], [10, 20]),
+			borderRadius: interpolate(progress.value, [0, 5], [5, 5]),
 		};
 	}),
 

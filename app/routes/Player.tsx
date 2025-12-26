@@ -113,6 +113,10 @@ function Player({ song_key, folder, player_position }: PlayerProps) {
 
 	return (
 		<Animated.View style={[base_styles.main, dynamic.main]}>
+			{folder && (
+				<Animated.Text style={[base_styles.heading, dynamic.heading]}>Listening from {folder}</Animated.Text>
+			)}
+
 			{current_song?.artwork && (
 				<Animated.Image
 					resizeMethod="scale"

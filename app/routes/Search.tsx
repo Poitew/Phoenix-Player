@@ -4,7 +4,7 @@ import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
-import Card from "../components/Card";
+import Card from "../components/CardSong";
 
 import * as FS from "../utility/FS";
 import * as StringUtility from "../utility/String";
@@ -41,15 +41,14 @@ function Search() {
 				placeholderTextColor="white"
 				style={styles.input}
 				onChangeText={(text) => set_search(text)}
-				autoFocus={true}
 			/>
 
-			<SectionHeader title="Results" route="HomeStack" />
+			<SectionHeader title="Results" route="Home" />
 
 			<FlatList
 				data={results}
 				keyExtractor={(item, index) => index.toString()}
-				renderItem={({ item }) => <Card navigation={navigation} track={item} />}
+				renderItem={({ item }) => <Card from_search={true} navigation={navigation} track={item} />}
 				initialNumToRender={6}
 				maxToRenderPerBatch={10}
 				removeClippedSubviews={true}

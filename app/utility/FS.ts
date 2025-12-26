@@ -4,6 +4,11 @@ const SONGS_PATH = FileSystem.documentDirectory + "songs.json";
 const SONG_PATH = FileSystem.documentDirectory + "song.json";
 const FOLDERS_PATH = FileSystem.documentDirectory + "songs_folders.json";
 
+/**
+ *
+ * Save all songs on the device
+ * @param tracks - All songs on the device
+ */
 export async function save_tracks(tracks: Track[]) {
 	try {
 		await FileSystem.writeAsStringAsync(SONGS_PATH, JSON.stringify(tracks));
@@ -12,6 +17,10 @@ export async function save_tracks(tracks: Track[]) {
 	}
 }
 
+/**
+ *
+ * @returns - potentally returns all the songs on the device
+ */
 export async function load_tracks(): Promise<Track[] | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(SONGS_PATH);
@@ -21,6 +30,9 @@ export async function load_tracks(): Promise<Track[] | null> {
 	}
 }
 
+/**
+ * Delete: FileSystem.documentDirectory + "songs.json";
+ */
 export async function clear_tracks_cache() {
 	try {
 		const file_info = await FileSystem.getInfoAsync(SONGS_PATH);
@@ -35,6 +47,10 @@ export async function clear_tracks_cache() {
 	}
 }
 
+/**
+ *
+ * @param track - the the track which is currently playing
+ */
 export async function save_current_track(track: Track) {
 	try {
 		await FileSystem.writeAsStringAsync(SONG_PATH, JSON.stringify(track));
@@ -43,6 +59,10 @@ export async function save_current_track(track: Track) {
 	}
 }
 
+/**
+ *
+ * @returns Track - the track which is currently playing
+ */
 export async function load_current_track(): Promise<Track | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(SONG_PATH);
@@ -52,7 +72,11 @@ export async function load_current_track(): Promise<Track | null> {
 	}
 }
 
-export async function save_songs_folders(songs: Record<string, Track[]>) {
+/**
+ *
+ * @param songs - a Record where the keys are folders name, and their content are songs contained in said folders
+ */
+export async function save_folders(songs: Record<string, Track[]>) {
 	try {
 		await FileSystem.writeAsStringAsync(FOLDERS_PATH, JSON.stringify(songs));
 	} catch (error) {
@@ -60,7 +84,11 @@ export async function save_songs_folders(songs: Record<string, Track[]>) {
 	}
 }
 
-export async function load_songs_folder(): Promise<Record<string, Track[]> | null> {
+/**
+ *
+ * @returns - potentally returns a record consisting of: "folder name" : [track1, track2, ...]
+ */
+export async function load_folders(): Promise<Record<string, Track[]> | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(FOLDERS_PATH);
 		return JSON.parse(file) as Record<string, Track[]>;
@@ -69,7 +97,10 @@ export async function load_songs_folder(): Promise<Record<string, Track[]> | nul
 	}
 }
 
-export async function clear_songs_folder() {
+/**
+ * Delete: FileSystem.documentDirectory + "songs_folders.json";
+ */
+export async function clear_folders() {
 	try {
 		const file_info = await FileSystem.getInfoAsync(FOLDERS_PATH);
 
@@ -83,6 +114,11 @@ export async function clear_songs_folder() {
 	}
 }
 
+/**
+ *
+ * @param key - The name of a folder, used as a key in a record to get all the content of said folder
+ * @returns Promise<Track[] | null> - potentally a Promise to an array of Track
+ */
 export async function load_specific_folder(key: string): Promise<Track[] | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(FOLDERS_PATH);

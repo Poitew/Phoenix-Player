@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Track } from "react-native-track-player";
-import FolderCard from "../components/FolderCard";
+import BigFolderCard from "../components/BigFolderCard";
 import SectionHeader from "../components/SectionHeader";
 
 import * as FS from "../utility/FS";
@@ -18,14 +18,14 @@ function Library() {
 	}, []);
 
 	async function get_cached_songs() {
-		const record_cached = await FS.load_songs_folder();
+		const record_cached = await FS.load_folders();
 
 		if (record_cached === null) {
 			const songs_cached = await FS.load_tracks();
 
 			if (songs_cached && songs_cached.length) {
 				const record = String.divide_songs_in_folder(songs_cached);
-				FS.save_songs_folders(record);
+				FS.save_folders(record);
 				set_folders(record);
 			}
 		} else {
@@ -41,10 +41,11 @@ function Library() {
 				<View style={styles.container}>
 					{folders &&
 						Object.entries(folders).map(([folder], index) => (
-							<FolderCard
+							<BigFolderCard
 								navigation={navigation}
 								folder={folder}
 								tracks_count={folders[folder].length}
+								track_artwork={folders[folder][0].artwork}
 								key={index}
 							/>
 						))}

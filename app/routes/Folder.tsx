@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, Image, StyleSheet } from "react-native";
 import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
-import Card from "../components/Card";
+import Card from "../components/CardSong";
 
 import * as FS from "../utility/FS";
 
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 
 	container: {
 		paddingBottom: 75,
-		gap: 25,
+		gap: 15,
 	},
 });
 

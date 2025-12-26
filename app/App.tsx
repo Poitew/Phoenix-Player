@@ -17,7 +17,7 @@ export default function App() {
 		});
 
 		return () => listener.remove();
-	}, []);
+	});
 
 	async function setup_player() {
 		await TrackPlayer.setupPlayer();
