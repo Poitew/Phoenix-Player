@@ -10,7 +10,6 @@
 	},
 	"dependencies": {
 		"@gauch_99/react-native-audio-files": "^1.2.1",
-		"@gorhom/bottom-sheet": "^5.2.6",
 		"@miblanchard/react-native-slider": "^2.6.0",
 		"@react-navigation/bottom-tabs": "^7.4.7",
 		"@react-navigation/native": "^7.1.17",

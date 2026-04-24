@@ -19,7 +19,7 @@ export async function save_tracks(tracks: Track[]) {
 
 /**
  *
- * @returns - potentally returns all the songs on the device
+ * @returns - returns all the songs on the device or null
  */
 export async function load_tracks(): Promise<Track[] | null> {
 	try {

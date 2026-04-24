@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import { Track } from "react-native-track-player";
-import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
 import SongCard from "../components/SongCard";
@@ -9,33 +8,32 @@ import SongCard from "../components/SongCard";
 import * as FS from "../utility/FS";
 
 function Folder({ route }: any) {
-	const [tracks, set_tracks] = useState<Track[]>();
-	const navigation: any = useNavigation();
-	const folder = route.params.folder;
+	const { folder } = route.params;
+	const [local_tracks, set_local_tracks] = useState<Track[]>([]);
 
 	useEffect(() => {
-		get_tracks();
-	});
+		async function load_folder_tracks() {
+			const tracks = await FS.load_specific_folder(folder);
+
+			if (tracks) {
+				set_local_tracks(tracks);
+			}
+		}
+
+		load_folder_tracks();
+	}, [folder]);
 
 	const render_item = useCallback(
-		({ item }: any) => <SongCard navigation={navigation} track={item} folder={folder} />,
-		[tracks],
+		({ item }: { item: Track }) => <SongCard track={item} folder_name={folder} />,
+		[folder],
 	);
-
-	async function get_tracks() {
-		const folder_content = await FS.load_specific_folder(folder);
-
-		if (folder_content) {
-			set_tracks(folder_content);
-		}
-	}
 
 	return (
 		<SafeAreaView style={styles.main}>
-			<SectionHeader title={folder} route="Library" />
+			<SectionHeader title={folder} route="Home" />
 
 			<FlatList
-				data={tracks}
+				data={local_tracks}
 				keyExtractor={(item: Track, index: number) => index.toString()}
 				renderItem={render_item}
 				initialNumToRender={8}

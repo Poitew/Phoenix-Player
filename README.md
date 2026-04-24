@@ -1,6 +1,6 @@
 <div align="center">
     <img src="./assets/splash-icon.png" alt="logo" width="400" height="auto" />
-    <h1 style="font-weight: bold; font-size: 3em" >Phoenix Player</h1>
+    <h1 style="font-weight: bold; font-size: 3em" >Music Player</h1>
     <p>Android Music Player built with React Native and Expo.</p>
     <div style="display: flex; justify-content: center; margin: 5% 0; gap: 2%">
         <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white"/>
@@ -9,7 +9,7 @@
         <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
     </div>
     <div style="display: flex; align-items: center; justify-content: center; gap: 10%; margin: 5% 0">
-        <img src="./assets/ss/Player.webp" alt="Player Screen"  width="200" height="auto" />
+        <img src="./assets/ss/Player.png" alt="Player Screen"  width="200" height="auto" />
     </div>
 </div>
 

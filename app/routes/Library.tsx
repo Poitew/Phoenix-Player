@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Track } from "react-native-track-player";
-import BigFolderCard from "../components/BigFolderCard";
+import FolderCard from "../components/FolderCard";
 import SectionHeader from "../components/SectionHeader";
 
 import * as FS from "../utility/FS";
@@ -36,12 +36,13 @@ function Library() {
 	return (
 		<SafeAreaView style={styles.main}>
 			<ScrollView>
-				<SectionHeader title="Folders" route="HomeStack" />
+				<SectionHeader title="Folders" route="Home" />
 
 				<View style={styles.container}>
 					{folders &&
 						Object.entries(folders).map(([folder], index) => (
-							<BigFolderCard
+							<FolderCard
+								variant="big"
 								navigation={navigation}
 								folder={folder}
 								tracks_count={folders[folder].length}

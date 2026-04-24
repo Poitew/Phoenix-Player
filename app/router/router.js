@@ -1,5 +1,4 @@
 import { createStaticNavigation } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../routes/Home";
 import Library from "../routes/Library";
@@ -8,8 +7,10 @@ import Search from "../routes/Search";
 import Settings from "../routes/Settings";
 
 import HomeIcon from "../../assets/icons/home.svg";
+import FolderIcon from "../../assets/icons/folder.svg";
 import SearchIcon from "../../assets/icons/search.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const screen_options = {
 	tabBarShowLabel: false,
@@ -26,7 +27,17 @@ const screen_options = {
 	},
 };
 
-const router_bottom_tabs = createBottomTabNavigator({
+const LibraryStack = createStackNavigator({
+	screens: {
+		LibraryHome: Library,
+
+		Folder: Folder,
+	},
+
+	screenOptions: screen_options,
+});
+
+const router = createBottomTabNavigator({
 	screens: {
 		Home: {
 			screen: Home,
@@ -34,6 +45,15 @@ const router_bottom_tabs = createBottomTabNavigator({
 			options: {
 				tabBarIcon: ({ size }) => <HomeIcon width={size} height={size} />,
 				animation: "shift",
+			},
+		},
+
+		Library: {
+			screen: LibraryStack,
+			options: {
+				tabBarIcon: ({ size }) => <FolderIcon width={size} height={size} />,
+				animation: "shift",
+				unmountOnBlur: true,
 			},
 		},
 
@@ -58,15 +78,4 @@ const router_bottom_tabs = createBottomTabNavigator({
 	screenOptions: screen_options,
 });
 
-const router_stack = createStackNavigator({
-	screens: {
-		HomeStack: router_bottom_tabs,
-
-		Library: Library,
-		Folder: Folder,
-	},
-
-	screenOptions: screen_options,
-});
-
-export const Navigation = createStaticNavigation(router_stack);
+export const Navigation = createStaticNavigation(router);

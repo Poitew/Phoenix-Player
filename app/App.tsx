@@ -1,9 +1,11 @@
 import { useEffect } from "react";
-import { AppState } from "react-native";
+import { AppState, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 import TrackPlayer, { Capability } from "react-native-track-player";
 import { Navigation } from "./router/router";
+import { MusicProvider } from "./components/MusicContext";
+import Player from "./routes/Player";
 
 export default function App() {
 	useEffect(() => {
@@ -32,9 +34,12 @@ export default function App() {
 	}
 
 	return (
-		<>
-			<StatusBar style="light" />
-			<Navigation />
-		</>
+		<MusicProvider>
+			<View style={{ flex: 1 }}>
+				<StatusBar style="light" />
+				<Navigation />
+				<Player />
+			</View>
+		</MusicProvider>
 	);
 }

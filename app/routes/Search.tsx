@@ -1,36 +1,39 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, TextInput } from "react-native";
 import { Track } from "react-native-track-player";
-import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
 import SongCard from "../components/SongCard";
 
 import * as FS from "../utility/FS";
-import * as StringUtility from "../utility/String";
+import * as String from "../utility/String";
 
 function Search() {
 	const [tracks, set_tracks] = useState<Track[]>([]);
-	const [results, set_results] = useState<Track[]>([]);
+	const [results, set_results] = useState<Track[]>();
 	const [search, set_search] = useState<string>("");
-
-	const navigation: any = useNavigation();
 
 	useEffect(() => {
 		get_cached_songs();
 	}, []);
 
 	useEffect(() => {
-		if (tracks && search) {
-			set_results(StringUtility.search_songs(tracks!, search));
+		if (search.trim() === "") {
+			set_results(undefined);
+			return;
+		}
+
+		if (search) {
+			set_results(String.search_songs(tracks!, search));
 		}
 	}, [search]);
 
 	async function get_cached_songs() {
-		const songs_cached = await FS.load_tracks();
+		let songs = await FS.load_tracks();
 
-		if (songs_cached && songs_cached.length) {
-			set_tracks(songs_cached);
+		if (songs && songs.length) {
+			songs = String.add_folder_to_track(songs);
+			set_tracks(songs);
 		}
 	}
 
@@ -46,12 +49,13 @@ function Search() {
 			<SectionHeader title="Results" route="Home" />
 
 			<FlatList
-				data={results}
+				data={results ? results : tracks}
 				keyExtractor={(item, index) => index.toString()}
-				renderItem={({ item }) => <SongCard from_search={true} navigation={navigation} track={item} />}
+				renderItem={({ item }: { item: any }) => <SongCard folder_name={item.folder} track={item} />}
 				initialNumToRender={6}
 				maxToRenderPerBatch={10}
 				removeClippedSubviews={true}
+				keyboardShouldPersistTaps="handled"
 			/>
 		</SafeAreaView>
 	);
