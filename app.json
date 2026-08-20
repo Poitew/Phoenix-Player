@@ -6,12 +6,6 @@
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
-		"newArchEnabled": false,
-		"splash": {
-			"image": "./assets/splash-icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#0f0d19ff"
-		},
 		"ios": {
 			"supportsTablet": true
 		},
@@ -20,7 +14,6 @@
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#0f0d19ff"
 			},
-			"edgeToEdgeEnabled": true,
 			"permissions": ["android.permission.READ_EXTERNAL_STORAGE", "android.permission.READ_MEDIA_AUDIO"],
 			"package": "com.poitew.phoenix_player"
 		},

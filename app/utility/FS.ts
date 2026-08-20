@@ -1,5 +1,4 @@
-import * as FileSystem from "expo-file-system";
-import { Track } from "react-native-track-player";
+import * as FileSystem from "expo-file-system/legacy";
 const SONGS_PATH = FileSystem.documentDirectory + "songs.json";
 const SONG_PATH = FileSystem.documentDirectory + "song.json";
 const FOLDERS_PATH = FileSystem.documentDirectory + "songs_folders.json";
@@ -24,7 +23,7 @@ export async function save_tracks(tracks: Track[]) {
 export async function load_tracks(): Promise<Track[] | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(SONGS_PATH);
-		return JSON.parse(file);
+		return JSON.parse(file) as Track[];
 	} catch (error) {
 		return null;
 	}
@@ -49,31 +48,6 @@ export async function clear_tracks_cache() {
 
 /**
  *
- * @param track - the the track which is currently playing
- */
-export async function save_current_track(track: Track) {
-	try {
-		await FileSystem.writeAsStringAsync(SONG_PATH, JSON.stringify(track));
-	} catch (error) {
-		console.error("Error while saving current song:", error);
-	}
-}
-
-/**
- *
- * @returns Track - the track which is currently playing
- */
-export async function load_current_track(): Promise<Track | null> {
-	try {
-		const file = await FileSystem.readAsStringAsync(SONG_PATH);
-		return JSON.parse(file);
-	} catch (error) {
-		return null;
-	}
-}
-
-/**
- *
  * @param songs - a Record where the keys are folders name, and their content are songs contained in said folders
  */
 export async function save_folders(songs: Record<string, Track[]>) {
@@ -86,7 +60,7 @@ export async function save_folders(songs: Record<string, Track[]>) {
 
 /**
  *
- * @returns - potentally returns a record consisting of: "folder name" : [track1, track2, ...]
+ * @returns - returns all the folders + songs on the device or null
  */
 export async function load_folders(): Promise<Record<string, Track[]> | null> {
 	try {
@@ -122,9 +96,9 @@ export async function clear_folders() {
 export async function load_specific_folder(key: string): Promise<Track[] | null> {
 	try {
 		const file = await FileSystem.readAsStringAsync(FOLDERS_PATH);
-		const folders = await JSON.parse(file);
+		const folders = JSON.parse(file) as Record<string, Track[]>;
 
-		return folders[key];
+		return folders[key] ?? null;
 	} catch (error) {
 		return null;
 	}

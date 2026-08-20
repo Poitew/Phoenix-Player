@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable, Dimensions } from "react-native";
-import TrackPlayer, { Event, Track, useProgress } from "react-native-track-player";
+import TrackPlayer, { Event, useProgress } from "@rntp/player";
 import { Slider } from "@miblanchard/react-native-slider";
 
 import seconds_to_time from "../utility/SecondsToTime";
@@ -27,12 +27,15 @@ function Player() {
 	useEffect(() => {
 		get_playing_track();
 
-		const listener = TrackPlayer.addEventListener(Event.PlaybackActiveTrackChanged, async () => {
-			const current_track = await TrackPlayer.getActiveTrack();
-
-			if (current_track) {
-				set_current_track(current_track);
-				FS.save_current_track(current_track);
+		const listener = TrackPlayer.addEventListener(Event.MediaItemTransition, ({ item }) => {
+			if (item) {
+				set_current_track({
+					url: item.url as string,
+					id: item.mediaId ?? item.url.toString(),
+					title: item.title,
+					artist: item.artist,
+					artwork: item.artworkUrl?.toString(),
+				});
 			}
 		});
 
@@ -40,16 +43,15 @@ function Player() {
 	}, []);
 
 	async function get_playing_track() {
-		const track_id = await TrackPlayer.getActiveTrackIndex();
+		const track = TrackPlayer.getActiveMediaItem();
 
-		if (track_id != undefined) {
-			const track = await TrackPlayer.getTrack(track_id);
-			if (track) set_current_track(track);
+		if (track) {
+			set_current_track(track as Track);
 		}
 	}
 
 	async function handle_play() {
-		is_playing ? await TrackPlayer.pause() : await TrackPlayer.play();
+		is_playing ? TrackPlayer.pause() : TrackPlayer.play();
 		set_is_playing(!is_playing);
 	}
 
@@ -108,7 +110,7 @@ function Player() {
 			</View>
 
 			<View style={styles.buttons}>
-				<Pressable style={styles.skip_btn} onPress={async () => await TrackPlayer.skipToPrevious()}>
+				<Pressable style={styles.skip_btn} onPress={async () => TrackPlayer.skipToPrevious()}>
 					<SkipBack width={icon_size} height={icon_size} />
 				</Pressable>
 
@@ -120,7 +122,7 @@ function Player() {
 					)}
 				</Pressable>
 
-				<Pressable style={styles.skip_btn} onPress={async () => await TrackPlayer.skipToNext()}>
+				<Pressable style={styles.skip_btn} onPress={async () => TrackPlayer.skipToNext()}>
 					<SkipNext width={icon_size} height={icon_size} />
 				</Pressable>
 			</View>

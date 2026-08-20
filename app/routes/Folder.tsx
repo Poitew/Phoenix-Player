@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
-import { Track } from "react-native-track-player";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
 import SongCard from "../components/SongCard";

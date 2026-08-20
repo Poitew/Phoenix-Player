@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { AppState, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
-import TrackPlayer, { Capability } from "react-native-track-player";
+import TrackPlayer, { PlayerCommand } from "@rntp/player";
 import { Navigation } from "./router/router";
 import { MusicProvider } from "./components/MusicContext";
 import Player from "./routes/Player";
@@ -19,13 +19,16 @@ export default function App() {
 		});
 
 		return () => listener.remove();
-	});
+	}, []);
 
 	async function setup_player() {
-		await TrackPlayer.setupPlayer();
+		TrackPlayer.setupPlayer({
+			contentType: "music",
+			handleAudioBecomingNoisy: true,
+		});
 
-		TrackPlayer.updateOptions({
-			capabilities: [Capability.Play, Capability.Pause, Capability.SkipToNext, Capability.SkipToPrevious],
+		TrackPlayer.setCommands({
+			capabilities: [PlayerCommand.PlayPause, PlayerCommand.Next, PlayerCommand.Previous],
 		});
 	}
 

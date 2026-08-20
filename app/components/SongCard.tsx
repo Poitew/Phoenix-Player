@@ -1,5 +1,4 @@
 import { Pressable, Image, View, Text, StyleSheet } from "react-native";
-import { Track } from "react-native-track-player";
 import { useMusic } from "./MusicContext";
 import GrayText from "./GrayText";
 import * as StringUtils from "../utility/String";
@@ -7,7 +6,7 @@ import * as StringUtils from "../utility/String";
 interface CardProps {
 	track: Track;
 	variant?: "small" | "big";
-	folder_name: string;
+	folder_name?: string;
 }
 
 function SongCard({ track, variant = "small", folder_name }: CardProps) {
@@ -15,7 +14,8 @@ function SongCard({ track, variant = "small", folder_name }: CardProps) {
 	const is_big = variant === "big";
 
 	function handle_press() {
-		load_and_play_folder(folder_name, track.id as number);
+		const folder = folder_name ?? track.url.match(/\/([^/]+)\/[^/]+$/)?.[1] ?? "Unknown";
+		load_and_play_folder(folder, track.id);
 	}
 
 	if (is_big) {

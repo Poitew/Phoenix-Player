@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
-import TrackPlayer, { Track } from "react-native-track-player";
+import TrackPlayer from "@rntp/player";
 import * as FS from "../utility/FS";
 
 interface IPlayerContextType {
-	load_and_play_folder: (folder: string, start_index: number) => Promise<void>;
+	load_and_play_folder: (folder: string, start_id: string) => Promise<void>;
 	current_folder: string;
 	current_track: Track | undefined;
 	set_current_track: React.Dispatch<React.SetStateAction<Track | undefined>>;
@@ -24,21 +24,22 @@ export function MusicProvider({ children }: IMusicProviderProps) {
 	const [is_playing, set_is_playing] = useState<boolean>(false);
 	const [current_track, set_current_track] = useState<Track | undefined>();
 
-	async function load_and_play_folder(folder_name: string, start_index: number) {
+	async function load_and_play_folder(folder_name: string, start_id: string) {
 		const songs = await FS.load_specific_folder(folder_name);
 
 		if (songs && songs.length > 0) {
 			set_queue(songs);
 			set_current_folder(folder_name);
 
-			await TrackPlayer.reset();
-			await TrackPlayer.add(songs);
-
-			const index = start_index ? songs.findIndex((s) => s.id === start_index) : 0;
-			await TrackPlayer.skip(index >= 0 ? index : 0);
+			const index = start_id ? songs.findIndex((s) => s.id === start_id) : 0;
+			TrackPlayer.setMediaItems(
+				// Convert songs from Track[] to MediaItem[]
+				songs.map(({ id, artwork, ...song }) => ({ ...song, mediaId: id, artworkUrl: artwork })),
+				index >= 0 ? index : 0,
+			);
 
 			set_is_playing(true);
-			await TrackPlayer.play();
+			TrackPlayer.play();
 		}
 	}
 

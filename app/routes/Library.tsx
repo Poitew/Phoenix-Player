@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Track } from "react-native-track-player";
 import FolderCard from "../components/FolderCard";
 import SectionHeader from "../components/SectionHeader";
 

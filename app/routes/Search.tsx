@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, TextInput } from "react-native";
-import { Track } from "react-native-track-player";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SectionHeader from "../components/SectionHeader";
 import SongCard from "../components/SongCard";
@@ -32,7 +31,6 @@ function Search() {
 		let songs = await FS.load_tracks();
 
 		if (songs && songs.length) {
-			songs = String.add_folder_to_track(songs);
 			set_tracks(songs);
 		}
 	}
@@ -51,7 +49,7 @@ function Search() {
 			<FlatList
 				data={results ? results : tracks}
 				keyExtractor={(item, index) => index.toString()}
-				renderItem={({ item }: { item: any }) => <SongCard folder_name={item.folder} track={item} />}
+				renderItem={({ item }: { item: Track }) => <SongCard track={item} />}
 				initialNumToRender={6}
 				maxToRenderPerBatch={10}
 				removeClippedSubviews={true}

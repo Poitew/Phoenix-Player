@@ -1,4 +1,4 @@
-import TrackPlayer, { Event } from "react-native-track-player";
+import TrackPlayer, { Event } from "@rntp/player";
 
 export const PlaybackService = async function () {
 	TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());

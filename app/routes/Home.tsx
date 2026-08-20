@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View, Platform, PermissionsAndroid, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchAudioFiles, Song } from "@gauch_99/react-native-audio-files";
-import { Track } from "react-native-track-player";
 import { useNavigation } from "@react-navigation/native";
 import BlackText from "../components/BlackText";
 import FolderCard from "../components/FolderCard";
@@ -60,7 +59,7 @@ function Home() {
 			title: song.title,
 			artist: song.artist,
 			artwork: song.imageUrl,
-			id: song.id,
+			id: `${song.id}`,
 		}));
 	}
 
