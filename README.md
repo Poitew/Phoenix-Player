@@ -9,7 +9,7 @@
         <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white"/>
     </div>
     <div style="display: flex; align-items: center; justify-content: center; gap: 10%; margin: 5% 0">
-        <img src="./assets/ss/Player.png" alt="Player Screen"  width="200" height="auto" />
+        <img src="./assets/ss/Player.jpeg" alt="Player Screen"  width="200" height="auto" />
     </div>
 </div>
 
@@ -25,6 +25,7 @@
         <li>🛃 Notification media control</li>
         <li>🔬 Search functionality</li>
         <li>💪 Written in TypeScript</li>
+        <li>⏩ New Architecture and Nitro Modules</li>
     </ul>
 </div>
 
@@ -32,7 +33,7 @@
     <h2>🤝 Contributing</h2>
     <ul>
         <li>Forks are welcome.</li>
-        <li>Bug reportings and suggetions are welcome.</li>
+        <li>Bug reportings and suggestions are welcome.</li>
         <li>PRs are welcome.</li>
     </ul>
 </div>
