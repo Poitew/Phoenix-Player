@@ -6,7 +6,7 @@ import * as StringUtils from "../utility/String";
 interface FolderCardProps {
 	navigation: any;
 	folder: string;
-	track_artwork: string | undefined;
+	track_artwork: string | undefined | null;
 	variant?: "small" | "big";
 	tracks_count?: number;
 }

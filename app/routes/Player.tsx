@@ -1,58 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { View, Text, StyleSheet, Image, Pressable, Dimensions } from "react-native";
-import TrackPlayer, { Event, useProgress } from "@rntp/player";
+import { TrackPlayer, useNowPlaying } from "react-native-nitro-player";
 import { Slider } from "@miblanchard/react-native-slider";
+import { useMusic } from "../components/MusicContext";
 
 import seconds_to_time from "../utility/SecondsToTime";
-import * as FS from "../utility/FS";
 
 import SkipNext from "../../assets/icons/skip.svg";
 import SkipBack from "../../assets/icons/skip-back.svg";
 import Resume from "../../assets/icons/resume.svg";
 import Stop from "../../assets/icons/stop.svg";
 import GrayText from "../components/GrayText";
-import { useMusic } from "../components/MusicContext";
 
 const { width: WINDOW_WIDTH } = Dimensions.get("window");
 
 function Player() {
-	const { current_folder, current_track, set_current_track, is_playing, set_is_playing } = useMusic();
+	const { current_folder, current_track, is_playing } = useMusic();
 	const [expanded, set_expanded] = useState<boolean>(false);
-	const { position, duration } = useProgress();
+	const { currentPosition } = useNowPlaying();
 
 	const yellow = "#C7DA54";
 	const icon_size_lg = 70;
 	const icon_size = 40;
 
-	useEffect(() => {
-		get_playing_track();
-
-		const listener = TrackPlayer.addEventListener(Event.MediaItemTransition, ({ item }) => {
-			if (item) {
-				set_current_track({
-					url: item.url as string,
-					id: item.mediaId ?? item.url.toString(),
-					title: item.title,
-					artist: item.artist,
-					artwork: item.artworkUrl?.toString(),
-				});
-			}
-		});
-
-		return () => listener.remove();
-	}, []);
-
-	async function get_playing_track() {
-		const track = TrackPlayer.getActiveMediaItem();
-
-		if (track) {
-			set_current_track(track as Track);
-		}
-	}
-
 	async function handle_play() {
-		is_playing ? TrackPlayer.pause() : TrackPlayer.play();
-		set_is_playing(!is_playing);
+		is_playing ? await TrackPlayer.pause() : await TrackPlayer.play();
 	}
 
 	if (!current_track) {
@@ -98,17 +70,17 @@ function Player() {
 					trackStyle={styles.slider}
 					minimumValue={0}
 					minimumTrackTintColor={yellow}
-					maximumValue={duration}
+					maximumValue={current_track?.duration || 0}
 					maximumTrackTintColor="white"
 					thumbTintColor={yellow}
-					value={position}
-					onSlidingComplete={(value) => TrackPlayer.seekTo(value[0])}
+					value={currentPosition}
+					onSlidingComplete={(value) => TrackPlayer.seek(value[0])}
 					step={1}
 				/>
 
 				<View style={styles.info_slider}>
-					<Text style={styles.text}>{seconds_to_time(position)}</Text>
-					<Text style={styles.text}>{seconds_to_time(duration)}</Text>
+					<Text style={styles.text}>{seconds_to_time(currentPosition)}</Text>
+					<Text style={styles.text}>{seconds_to_time(current_track?.duration || 0)}</Text>
 				</View>
 			</View>
 

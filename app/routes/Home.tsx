@@ -55,13 +55,15 @@ function Home() {
 		}
 	}
 
-	function songs_to_track(songs: Song[]) {
+	function songs_to_track(songs: Song[]): Track[] {
 		return songs.map((song) => ({
 			url: song.audioUrl,
 			title: song.title,
+			album: song.album,
+			duration: song.duration / 1000,
 			artist: song.artist,
 			artwork: song.imageUrl,
-			id: `${song.id}`,
+			id: song.id,
 		}));
 	}
 

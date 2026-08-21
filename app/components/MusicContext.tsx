@@ -1,15 +1,13 @@
 import { createContext, useContext, useState } from "react";
-import TrackPlayer from "@rntp/player";
+import { TrackPlayer, PlayerQueue, useNowPlaying, TrackItem } from "react-native-nitro-player";
 import * as FS from "../utility/FS";
 
 interface IPlayerContextType {
 	load_and_play_folder: (folder: string, start_id: string) => Promise<void>;
 	current_folder: string;
 	current_track: Track | undefined;
-	set_current_track: React.Dispatch<React.SetStateAction<Track | undefined>>;
-	queue: Track[];
 	is_playing: boolean;
-	set_is_playing: React.Dispatch<React.SetStateAction<boolean>>;
+	queue: Track[];
 }
 
 const PlayerContext = createContext<IPlayerContextType | undefined>(undefined);
@@ -21,25 +19,41 @@ interface IMusicProviderProps {
 export function MusicProvider({ children }: IMusicProviderProps) {
 	const [queue, set_queue] = useState<Track[]>([]);
 	const [current_folder, set_current_folder] = useState<string>("");
-	const [is_playing, set_is_playing] = useState<boolean>(false);
-	const [current_track, set_current_track] = useState<Track | undefined>();
+
+	const { currentTrack, currentState } = useNowPlaying();
+
+	const is_playing = currentState === "playing";
+	const current_track: Track | undefined = currentTrack
+		? ({ ...currentTrack, folder_name: current_folder } as Track)
+		: undefined;
 
 	async function load_and_play_folder(folder_name: string, start_id: string) {
-		const songs = await FS.load_specific_folder(folder_name);
+		const tracks = await FS.load_specific_folder(folder_name);
 
-		if (songs && songs.length > 0) {
-			set_queue(songs);
+		if (tracks && tracks.length > 0) {
+			set_queue(tracks);
 			set_current_folder(folder_name);
 
-			const index = start_id ? songs.findIndex((s) => s.id === start_id) : 0;
-			TrackPlayer.setMediaItems(
-				// Convert songs from Track[] to MediaItem[]
-				songs.map(({ id, artwork, ...song }) => ({ ...song, mediaId: id, artworkUrl: artwork })),
-				index >= 0 ? index : 0,
-			);
+			const playlist_id = await PlayerQueue.createPlaylist(folder_name);
 
-			set_is_playing(true);
-			TrackPlayer.play();
+			const track_items: TrackItem[] = tracks.map((track) => ({
+				id: track.id,
+				url: track.url,
+				title: track.title ?? "Unknown title",
+				artist: track.artist ?? "Unknown artist",
+				album: track.album ?? folder_name,
+				duration: track.duration ?? 0,
+				artwork: track.artwork ?? null,
+				extraPayload: {
+					folder_name: track.folder_name ?? "",
+				},
+			}));
+
+			await PlayerQueue.addTracksToPlaylist(playlist_id, track_items);
+
+			const index = start_id ? tracks.findIndex((t) => t.id === start_id) : 0;
+			const start_track = track_items[index >= 0 ? index : 0];
+			await TrackPlayer.playSong(start_track.id, playlist_id);
 		}
 	}
 
@@ -49,10 +63,8 @@ export function MusicProvider({ children }: IMusicProviderProps) {
 				load_and_play_folder,
 				current_folder,
 				current_track,
-				set_current_track,
-				queue,
 				is_playing,
-				set_is_playing,
+				queue,
 			}}
 		>
 			{children}

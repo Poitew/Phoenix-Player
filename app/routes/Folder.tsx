@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#0f0d19ff",
 		minHeight: "100%",
 		padding: 15,
+		paddingBottom: 100,
 	},
 
 	container: {
