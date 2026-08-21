@@ -1,6 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as FS from "../utility/FS";
+import PageHeader from "../components/PageHeader";
 
 function Settings() {
 	async function delete_cache() {
@@ -12,12 +13,13 @@ function Settings() {
 	return (
 		<SafeAreaView style={styles.main}>
 			<ScrollView>
-				<Text style={styles.title}>Settings</Text>
+				<PageHeader kicker="PREFERENCES" title="Settings" subtitle="Adjust the settings to your liking." />
 
 				{/* TO-DO: Create a Card component once more settings starts to get implemented */}
 				<View style={styles.cache_button_container}>
 					<Pressable onPress={delete_cache} style={styles.cache_button}>
-						<Text>Delete Cache</Text>
+						<Text style={styles.cache_title}>Clear local library cache</Text>
+						<Text style={styles.cache_hint}>Remove cached data and refetch on next visit</Text>
 					</Pressable>
 				</View>
 			</ScrollView>
@@ -29,26 +31,31 @@ const styles = StyleSheet.create({
 	main: {
 		minHeight: "100%",
 		backgroundColor: "#0f0d19ff",
-		padding: 15,
+		padding: 20,
+		paddingBottom: 100,
 	},
-
-	title: {
-		fontSize: 35,
-		color: "white",
-	},
-
 	cache_button_container: {
 		alignItems: "center",
-		marginTop: 20,
+		marginTop: 30,
 	},
 
 	cache_button: {
-		width: "92.5%",
-		height: 50,
-		borderRadius: 10,
-		backgroundColor: "#cd5353ff",
-		alignItems: "center",
+		width: "100%",
+		minHeight: 74,
+		borderRadius: 16,
+		backgroundColor: "#211c38",
+		padding: 16,
 		justifyContent: "center",
+	},
+	cache_title: {
+		color: "#f7f4ff",
+		fontWeight: "800",
+		fontSize: 15,
+	},
+	cache_hint: {
+		color: "#958cae",
+		fontSize: 11,
+		marginTop: 5,
 	},
 });
 

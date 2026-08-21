@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList, TextInput } from "react-native";
+import { StyleSheet, FlatList, TextInput, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SectionHeader from "../components/SectionHeader";
 import SongCard from "../components/SongCard";
+import PageHeader from "../components/PageHeader";
 
 import * as FS from "../utility/FS";
 import * as String from "../utility/String";
@@ -37,14 +37,18 @@ function Search() {
 
 	return (
 		<SafeAreaView style={styles.main}>
+			<PageHeader kicker="DISCOVER" title="Find your mood" subtitle="Look through every saved track." />
 			<TextInput
-				placeholder="Search from complete library"
-				placeholderTextColor="white"
+				placeholder="Track title"
+				placeholderTextColor="#8f86a4"
 				style={styles.input}
 				onChangeText={(text) => set_search(text)}
 			/>
 
-			<SectionHeader title="Results" route="Home" />
+			<View style={styles.results_header}>
+				<Text style={styles.results_title}>{results ? "Matches" : "All tracks"}</Text>
+				<Text style={styles.count}>{(results ?? tracks).length} TRACKS</Text>
+			</View>
 
 			<FlatList
 				data={results ? results : tracks}
@@ -63,15 +67,35 @@ const styles = StyleSheet.create({
 	main: {
 		minHeight: "100%",
 		backgroundColor: "#0f0d19ff",
-		padding: 15,
+		padding: 20,
+		paddingBottom: 100,
 	},
-
 	input: {
-		backgroundColor: "#25203fff",
+		backgroundColor: "#211c38",
 		color: "white",
-		paddingLeft: 20,
-		marginBottom: 15,
-		borderRadius: 50,
+		paddingHorizontal: 18,
+		height: 54,
+		marginBottom: 24,
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: "#393052",
+	},
+	results_header: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "baseline",
+		marginBottom: 10,
+	},
+	results_title: {
+		color: "#f7f4ff",
+		fontSize: 18,
+		fontWeight: "800",
+	},
+	count: {
+		color: "#766d8d",
+		fontSize: 10,
+		fontWeight: "800",
+		letterSpacing: 1,
 	},
 
 	section: {

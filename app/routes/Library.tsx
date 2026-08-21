@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FolderCard from "../components/FolderCard";
-import SectionHeader from "../components/SectionHeader";
+import PageHeader from "../components/PageHeader";
 
 import * as FS from "../utility/FS";
 import * as String from "../utility/String";
@@ -35,7 +35,7 @@ function Library() {
 	return (
 		<SafeAreaView style={styles.main}>
 			<ScrollView>
-				<SectionHeader title="Folders" route="Home" />
+				<PageHeader kicker="YOUR COLLECTION" title="Folders" subtitle="Every sound has a place." />
 
 				<View style={styles.container}>
 					{folders &&
@@ -59,11 +59,12 @@ const styles = StyleSheet.create({
 	main: {
 		backgroundColor: "#0f0d19ff",
 		minHeight: "100%",
-		padding: 15,
+		padding: 20,
+		paddingBottom: 100,
 	},
 
 	container: {
-		marginTop: 50,
+		marginTop: 8,
 		gap: 35,
 	},
 });

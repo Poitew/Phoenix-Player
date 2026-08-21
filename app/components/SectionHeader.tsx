@@ -11,7 +11,7 @@ interface SectionHeaderProps {
 function SectionHeader({ title, route }: SectionHeaderProps) {
 	const navigation: any = useNavigation();
 
-	const icon_size = 75;
+	const icon_size = 40;
 
 	return (
 		<View>
@@ -31,12 +31,15 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
+		marginBottom: 18,
 	},
 
 	page_title: {
 		flex: 1,
 		color: "white",
-		fontSize: 30,
+		fontSize: 28,
+		fontWeight: "800",
+		letterSpacing: 0.3,
 	},
 });
 

@@ -60,36 +60,36 @@ function FolderCard({ navigation, folder, track_artwork, variant = "small", trac
 
 const styles = StyleSheet.create({
 	folder: {
-		minWidth: "45%",
+		minWidth: "46%",
 		flex: 1,
 		flexShrink: 0,
-		borderRadius: 5,
+		borderRadius: 16,
 		overflow: "hidden",
 		flexDirection: "row",
 		alignItems: "center",
-		gap: 10,
+		gap: 12,
 	},
 
 	folder_small: {
-		backgroundColor: "#25213dff",
-		padding: 1,
+		backgroundColor: "#211c38",
+		padding: 8,
 	},
 
 	folder_big: {
 		backgroundColor: "transparent",
-		padding: 1,
+		padding: 8,
 	},
 
 	image_small: {
-		width: 50,
-		height: 50,
-		borderRadius: 5,
+		width: 52,
+		height: 52,
+		borderRadius: 12,
 	},
 
 	image_big: {
-		width: 75,
-		height: 75,
-		borderRadius: 5,
+		width: 78,
+		height: 78,
+		borderRadius: 14,
 	},
 
 	icon_wrapper_small: {
@@ -103,12 +103,14 @@ const styles = StyleSheet.create({
 	},
 
 	title_small: {
-		color: "white",
+		color: "#f7f4ff",
+		fontWeight: "700",
 	},
 
 	title_big: {
-		color: "white",
-		fontSize: 20,
+		color: "#f7f4ff",
+		fontSize: 17,
+		fontWeight: "700",
 	},
 });
 

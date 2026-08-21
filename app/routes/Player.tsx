@@ -65,7 +65,9 @@ function Player() {
 				<Image resizeMethod="scale" source={{ uri: current_track.artwork }} style={mini_styles.image} />
 
 				<View>
-					<Text style={styles.heading}>{current_track.title}</Text>
+					<Text numberOfLines={1} style={styles.heading}>
+						{current_track.title}
+					</Text>
 
 					<GrayText style={styles.artist}>{current_track?.artist || "Artist"}</GrayText>
 				</View>
@@ -75,9 +77,10 @@ function Player() {
 
 	return (
 		<View style={[StyleSheet.absoluteFill, styles.main]}>
-			<Pressable onPress={() => set_expanded(false)}>
-				<GrayText>Go back</GrayText>
+			<Pressable style={styles.back_button} onPress={() => set_expanded(false)}>
+				<GrayText>MINIMIZE PLAYER</GrayText>
 			</Pressable>
+
 			{current_folder && <Text style={styles.heading}>Listening from {current_folder}</Text>}
 
 			<Image resizeMethod="scale" source={{ uri: current_track.artwork }} style={styles.image} />
@@ -110,7 +113,7 @@ function Player() {
 			</View>
 
 			<View style={styles.buttons}>
-				<Pressable style={styles.skip_btn} onPress={async () => TrackPlayer.skipToPrevious()}>
+				<Pressable onPress={() => TrackPlayer.skipToPrevious()}>
 					<SkipBack width={icon_size} height={icon_size} />
 				</Pressable>
 
@@ -122,7 +125,7 @@ function Player() {
 					)}
 				</Pressable>
 
-				<Pressable style={styles.skip_btn} onPress={async () => TrackPlayer.skipToNext()}>
+				<Pressable onPress={async () => TrackPlayer.skipToNext()}>
 					<SkipNext width={icon_size} height={icon_size} />
 				</Pressable>
 			</View>
@@ -134,15 +137,17 @@ const mini_styles = StyleSheet.create({
 	main: {
 		width: "95%",
 		alignSelf: "center",
-		borderRadius: 5,
-		backgroundColor: "#1a1730",
-		padding: 10,
+		borderRadius: 18,
+		backgroundColor: "#211c38",
+		padding: 9,
 		overflow: "hidden",
 		position: "absolute",
 		flexDirection: "row",
 		alignItems: "center",
 		columnGap: 10,
 		bottom: 70,
+		borderWidth: 1,
+		borderColor: "#393052",
 	},
 
 	image: {
@@ -161,17 +166,18 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
-		backgroundColor: "#161427",
-		rowGap: 30,
+		backgroundColor: "#0e0c18",
+		rowGap: 24,
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+		padding: 24,
 	},
 
 	image: {
-		borderRadius: 3,
-		width: 325,
-		height: 325,
+		borderRadius: 24,
+		width: 300,
+		height: 300,
 	},
 
 	info: {
@@ -180,8 +186,8 @@ const styles = StyleSheet.create({
 	},
 
 	title: {
-		color: "white",
-		fontSize: 18,
+		color: "#f7f4ff",
+		fontSize: 21,
 		fontWeight: "bold",
 	},
 
@@ -211,16 +217,18 @@ const styles = StyleSheet.create({
 	buttons: {
 		flexDirection: "row",
 		alignItems: "center",
-		gap: 30,
+		gap: 34,
+	},
+
+	back_button: {
+		paddingVertical: 10,
 	},
 
 	play_button: {
 		backgroundColor: "#C7DA54",
 		borderRadius: 100,
-		padding: 10,
+		padding: 12,
 	},
-
-	skip_btn: {},
 });
 
 export default Player;

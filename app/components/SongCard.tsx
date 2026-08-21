@@ -50,9 +50,9 @@ function SongCard({ track, variant = "small", folder_name }: CardProps) {
 
 const styles = StyleSheet.create({
 	card: {
-		padding: 5,
-		borderRadius: 7.5,
-		gap: 15,
+		padding: 9,
+		borderRadius: 16,
+		gap: 13,
 	},
 
 	card_small: {
@@ -63,34 +63,34 @@ const styles = StyleSheet.create({
 	card_big: {
 		flexDirection: "column",
 		alignItems: "center",
-		backgroundColor: "transparent",
+		backgroundColor: "#211c38",
 	},
 
 	hover_card: {
-		backgroundColor: "#231e39ff",
+		backgroundColor: "#30294c",
 	},
 
 	image_small: {
-		width: 55,
-		height: 55,
-		borderRadius: 5,
+		width: 58,
+		height: 58,
+		borderRadius: 12,
 	},
 
 	image_big: {
-		width: 125,
-		height: 125,
-		borderRadius: 10,
+		width: 142,
+		height: 142,
+		borderRadius: 16,
 	},
 
 	title_small: {
 		color: "white",
-		fontSize: 16.5,
+		fontSize: 16,
 		fontWeight: "bold",
 	},
 
 	title_big: {
 		color: "white",
-		fontSize: 17.5,
+		fontSize: 15,
 		fontWeight: "bold",
 	},
 

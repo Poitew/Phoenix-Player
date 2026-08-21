@@ -13,13 +13,14 @@ import SettingsIcon from "../../assets/icons/settings.svg";
 import { createStackNavigator } from "@react-navigation/stack";
 
 const screen_options = {
-	tabBarShowLabel: false,
 	headerShown: false,
 	tabBarActiveTintColor: "#C7DA54",
 	tabBarStyle: {
-		backgroundColor: "#161427",
+		position: "absolute",
+		height: 64,
+		borderRadius: 22,
+		backgroundColor: "#211c38",
 		borderTopWidth: 0,
-		height: 60,
 	},
 	tabBarItemStyle: {
 		alignItems: "center",
@@ -53,7 +54,7 @@ const router = createBottomTabNavigator({
 			options: {
 				tabBarIcon: ({ size }) => <FolderIcon width={size} height={size} />,
 				animation: "shift",
-				unmountOnBlur: true,
+				popToTopOnBlur: true,
 			},
 		},
 
